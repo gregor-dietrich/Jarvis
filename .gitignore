@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,c++,notepadpp
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,visualstudiocode,c++,notepadpp
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,notepadpp,xcode,c++
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,visualstudiocode,notepadpp,xcode,c++
 
 ### C++ ###
 # Prerequisites
@@ -57,6 +57,23 @@
 # Ignore all local history of files
 .history
 .ionide
+
+### Xcode ###
+## User settings
+xcuserdata/
+
+## Xcode 8 and earlier
+*.xcscmblueprint
+*.xccheckout
+
+### Xcode Patch ###
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+/*.gcno
+**/xcshareddata/WorkspaceSettings.xcsettings
 
 ### VisualStudio ###
 ## Ignore Visual Studio temporary files, build results, and
@@ -451,4 +468,4 @@ FodyWeavers.xsd
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
-# End of https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,c++,notepadpp
+# End of https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,notepadpp,xcode,c++
