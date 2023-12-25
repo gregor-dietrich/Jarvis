@@ -7,10 +7,11 @@ namespace gcd
 	class Server
 	{
 		port_t m_port;
+		bool m_public;
 
 		void handleRequest(RequestType& request, SocketType& socket);
 	public:
-		explicit Server(const port_t port = 8080);
+		Server(const port_t port = 8080, const bool isPublic = true);
 
 		void run();
 	};
