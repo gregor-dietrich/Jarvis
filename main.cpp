@@ -1,10 +1,13 @@
 #include <iostream>
+#include <iostream>
 
 #include "Server.h"
 
-int main()
+using namespace gcd;
+
+int main(int argc, char** argv)
 {
-	const gcd::Server server;
+	Server server(1337);
 
 	try {
 		server.run();

@@ -6,12 +6,12 @@ namespace gcd
 {
 	class Server
 	{
-		const i32 m_port;
+		port_t m_port;
 
-		void handleRequest(Request& request, Socket& socket) const;
+		void handleRequest(RequestType& request, SocketType& socket);
 	public:
-		Server(const i32 port = 8080) : m_port(port) {};
+		explicit Server(const port_t port = 8080);
 
-		void run() const;
+		void run();
 	};
 }

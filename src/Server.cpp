@@ -1,10 +1,18 @@
+#include <iostream>
+
 #include "Server.h"
 
 namespace gcd
 {
-	void Server::handleRequest(Request& request, Socket& socket) const {
+	Server::Server(const port_t port/* = 8080 */) : m_port(port)
+	{
+		std::cout << "Booting...\n";
+	}
+
+	void Server::handleRequest(RequestType& request, SocketType& socket)
+	{
 		// Prepare the response message
-		Response response;
+		ResponseType response;
 		response.version(request.version());
 		response.result(http::status::ok);
 		response.set(http::field::server, "My HTTP Server");
@@ -16,24 +24,28 @@ namespace gcd
 		http::write(socket, response);
 	}
 
-	void Server::run() const {
+	void Server::run()
+	{
 		boost::asio::io_context io_context;
 		tcp::acceptor acceptor(io_context, { tcp::v4(), m_port });
+		std::cout << "Listening on port " << m_port << "\n";
 
 		while (true) {
-			Socket socket(io_context);
+			SocketType socket(io_context);
 			acceptor.accept(socket);
+			std::cout << "Connection accepted.\n";
 
 			// Read the HTTP request
 			boost::beast::flat_buffer buffer;
-			Request request;
+			RequestType request;
 			http::read(socket, buffer, request);
 
 			// Handle the request
 			handleRequest(request, socket);
 
 			// Close the socket
-			socket.shutdown(Socket::shutdown_send);
+			socket.shutdown(SocketType::shutdown_send);
+			std::cout << "Socket closed.\n";
 		}
 	}
 }
