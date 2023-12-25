@@ -1,21 +1,17 @@
 #pragma once
 
-#ifndef _WIN32_WINNT
-	#define _WIN32_WINNT 0x0601
-#endif
-
-#include <boost/asio.hpp>
-#include <boost/beast.hpp>
+#include "Types.h"
 
 namespace gcd
 {
-	using tcp = boost::asio::ip::tcp;
-	namespace http = boost::beast::http;
-
 	class Server
 	{
-		void handleRequest(http::request<http::string_body>& request, tcp::socket& socket);
+		const i32 m_port;
+
+		void handleRequest(Request& request, Socket& socket) const;
 	public:
-		void run();
+		Server(const i32 port = 8080) : m_port(port) {};
+
+		void run() const;
 	};
 }
