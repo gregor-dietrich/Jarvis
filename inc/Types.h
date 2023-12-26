@@ -9,12 +9,12 @@
 
 namespace gcd
 {
-	namespace ip = boost::asio::ip;
 	namespace http = boost::beast::http;
+	using HttpResponse = http::response<http::string_body>;
+	using HttpRequest = http::request<http::string_body>;
 
-	using tcp = ip::tcp;
+	namespace ip = boost::asio::ip;
 	using port_t = ip::port_type;
-	using ResponseType = http::response<http::string_body>;
-	using RequestType = http::request<http::string_body>;
-	using SocketType = tcp::socket;
+	using tcp = ip::tcp;
+	using TcpSocket = tcp::socket;
 }

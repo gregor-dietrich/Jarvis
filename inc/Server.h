@@ -9,7 +9,8 @@ namespace gcd
 		port_t m_port;
 		bool m_public;
 
-		void handleRequest(RequestType& request, SocketType& socket);
+		void handleRequest(HttpRequest& request, TcpSocket& socket);
+		HttpResponse createResponse();
 	public:
 		Server(const port_t port = 8080, const bool isPublic = true);
 

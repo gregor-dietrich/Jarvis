@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 
 #include "Server.h"
 
@@ -9,18 +10,45 @@ namespace gcd
 		std::cout << "Booting...\n";
 	}
 
-	void Server::handleRequest(RequestType& request, SocketType& socket)
+	void Server::handleRequest(HttpRequest& request, TcpSocket& socket)
 	{
-		const http::verb requestVerb = request.method();
-		std::cout << "Received a " << requestVerb << " Request...\n";
+		const http::verb method = request.method();
+		std::cout << "Received a " << method << " Request...\n";
 
 		// Prepare the response message
-		ResponseType response;
+		HttpResponse response;
 		response.version(request.version());
-		response.result(http::status::ok);
-		response.set(http::field::server, "My HTTP Server");
-		response.set(http::field::content_type, "text/html");
-		response.body() = "<!DOCTYPE html><html lang=\"en\"><head><title>Jarvis</title></head><body><div>Hello Mars!</div></body></html>";
+		response.set(http::field::server, "Jarvis");
+		response.result(http::status::method_not_allowed);
+
+		std::stringstream html;
+		switch (method) {
+		case http::verb::connect:
+			break;
+		case http::verb::delete_:
+			break;
+		case http::verb::get:
+			response.set(http::field::content_type, "text/html");
+			response.result(http::status::ok);
+
+			html << "<!DOCTYPE html><html lang=\"en\"><head><title>Jarvis</title></head><body>";
+			html << "<div><p>Received a " << method << " Request.</p></div>";
+			html << "</body></html>";
+			response.body() = html.str();
+			break;
+		case http::verb::head:
+			break;
+		case http::verb::options:
+			break;
+		case http::verb::patch:
+			break;
+		case http::verb::post:
+			break;
+		case http::verb::put:
+			break;
+		case http::verb::trace:
+			break;
+		}
 		response.prepare_payload();
 
 		// Send the response to the client
@@ -36,20 +64,20 @@ namespace gcd
 
 		while (true) {
 			try {
-				SocketType socket(io_context);
+				TcpSocket socket(io_context);
 				acc.accept(socket);
 				std::cout << "Connection accepted.\n";
 
 				// Read the HTTP request
 				boost::beast::flat_buffer buffer;
-				RequestType request;
+				HttpRequest request;
 				http::read(socket, buffer, request);
 
 				// Handle the request
 				handleRequest(request, socket);
 
 				// Close the socket
-				socket.shutdown(SocketType::shutdown_send);
+				socket.shutdown(TcpSocket::shutdown_send);
 				std::cout << "Socket closed.\n";
 			} catch (std::exception e) {
 				std::cerr << "Exception: " << e.what() << "\n";
