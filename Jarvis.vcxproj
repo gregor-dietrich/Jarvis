@@ -133,12 +133,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Logger.cpp" />
+    <ClCompile Include="src\ResponseFactory.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\Logger.h" />
     <ClInclude Include="inc\Server.h" />
     <ClInclude Include="inc\Types.h" />
+    <ClInclude Include="inc\ResponseFactory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

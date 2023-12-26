@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iostream>
 
+#include "Logger.h"
 #include "Server.h"
 
 using namespace gcd;
@@ -11,15 +12,15 @@ int main(int argc, char** argv)
 
 	try {
 		server.run();
-		std::cout << "Shutting down...\n";
+		Logger::get()->info("Shutting down...");
 	} catch(std::exception e) {
-		std::cerr << e.what() << "\n";
+		Logger::get()->error("Exception: " + std::string(e.what()));
 		return EXIT_PROCESS_DEBUG_EVENT;
 	} catch (...) {
-		std::cerr << "Something went horribly wrong...\n";
+		Logger::get()->error("Something went horribly wrong...");
 		return EXIT_FAILURE;
 	}
 
-	std::cout << "Shut down gracefully.\n";
+	Logger::get()->info("Shut down gracefully.");
 	return EXIT_SUCCESS;
 }
