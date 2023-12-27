@@ -143,6 +143,7 @@
     <ClInclude Include="inc\Server.h" />
     <ClInclude Include="inc\Types.h" />
     <ClInclude Include="inc\ResponseFactory.h" />
+    <ClInclude Include="inc\Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

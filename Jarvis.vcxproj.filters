@@ -41,5 +41,8 @@
     <ClInclude Include="inc\Logger.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="inc\Util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
