@@ -1,6 +1,7 @@
 #include <chrono>
 #include <ctime>
 #include <iostream>
+#include <sstream>
 
 #include "Logger.h"
 
@@ -25,7 +26,7 @@ namespace gcd
 			return;
 		}
 		std::filesystem::create_directory(path);
-		Logger::info("Log Directory created: " + path);
+		trace("Log Directory created: " + path);
 	}
 
 	std::string Logger::getTime()
@@ -41,12 +42,24 @@ namespace gcd
 		return ss.str();
 	}
 
+	std::string Logger::format(const std::string& message)
+	{
+		std::stringstream result;
+
+		result << "[" << getTime() << "] " << message << "\n";
+
+		return result.str();
+	}
+
 	std::string Logger::format(const LogLevel messageType, const std::string& message)
 	{
 		std::stringstream result;
 
 		result << "[" << getTime() << "] (";
 		switch (messageType) {
+		case LogLevel::TRACEMSG:
+			result << "TRACE";
+			break;
 		case LogLevel::INFOMSG:
 			result << "INFO";
 			break;
@@ -67,7 +80,9 @@ namespace gcd
 #ifdef _WIN32
 		static const auto& H_CONSOLE = GetStdHandle(isError ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE);
 		if (!SetConsoleTextAttribute(H_CONSOLE, static_cast<WORD>(c))) {
-			warning("Failed to change text color for STDERR!", false);
+			std::stringstream ss;
+			ss << "Failed to change text color for " << (isError ? "STDERR" : "STDOUT") << "!";
+			warning(ss.str(), false);
 		}
 #else
 		if (isError) {
@@ -82,6 +97,7 @@ namespace gcd
 	void Logger::print(const LogLevel messageType, const std::string& message)
 	{
 		switch (messageType) {
+		case LogLevel::TRACEMSG:
 		case LogLevel::INFOMSG:
 			std::cout << message;
 			break;
@@ -127,6 +143,25 @@ namespace gcd
 		return true;
 	}
 
+	void Logger::print(const std::string& message)
+	{
+		std::cout << format(message);
+	}
+
+	void Logger::trace(const std::string& message)
+	{
+		if (logLevel < LogLevel::TRACEMSG) {
+			return;
+		}
+		const auto formatted = format(LogLevel::TRACEMSG, message);
+
+		setColor(false, color::light_blue);
+		print(LogLevel::TRACEMSG, formatted);
+		setColor(false);
+
+		log(formatted);
+	}
+
 	void Logger::info(const std::string& message)
 	{
 		if (logLevel < LogLevel::INFOMSG) {
@@ -134,7 +169,7 @@ namespace gcd
 		}
 		const auto formatted = format(LogLevel::INFOMSG, message);
 
-		setColor(false, color::green);
+		setColor(false, color::light_green);
 		print(LogLevel::INFOMSG, formatted);
 		setColor(false);
 
@@ -155,7 +190,7 @@ namespace gcd
 		log(formatted);
 	}
 
-	void Logger::error(const std::string& message, const bool colored/* = true*/)
+	void Logger::error(const std::string& message)
 	{
 		const auto formatted = format(LogLevel::ERRORMSG, message);
 

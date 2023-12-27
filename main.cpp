@@ -52,10 +52,15 @@ int main(int argc, char** argv)
 		return EXIT_PROCESS_DEBUG_EVENT;
 	}
 
+	Logger::trace("Hello World!");
+	Logger::info("Hello Earth!");
+	Logger::warning("Hello Venus!");
+	Logger::error("Hello Mars!\n");
+
 	try {
 		Server server(1337);
 		server.run();
-		Logger::info("Shutting down...");
+		Logger::trace("Shutting down...");
 	} catch(const std::exception& e) {
 		Logger::error("Exception in main(): " + std::string(e.what()));
 		return EXIT_PROCESS_DEBUG_EVENT;

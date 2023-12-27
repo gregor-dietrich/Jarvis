@@ -10,7 +10,22 @@ namespace gcd
 {
 	Server::Server(const port_t port/* = 8080 */, const bool isPublic/* = true */) : m_port(port), m_public(isPublic)
 	{
-		Logger::info("Booting up...");
+		Logger::trace("Booting up...");
+	}
+
+	void Server::run()
+	{
+		boost::asio::io_context io_context;
+		tcp::acceptor acc = m_public ? tcp::acceptor(io_context, { tcp::endpoint(tcp::v4(), m_port) }) : tcp::acceptor(io_context, { tcp::v4(), m_port });
+
+		Logger::print("Listening on port " + std::to_string(m_port));
+
+		while (true) {
+			TcpSocket socket(io_context);
+			acc.accept(socket);
+
+			handleRequest(socket);
+		}
 	}
 
 	void Server::handleRequest(TcpSocket& socket)
@@ -22,7 +37,7 @@ namespace gcd
 			ip_address = endpoint.address();
 			port = endpoint.port();
 
-			Logger::info("Connection accepted from " + ip_address.to_string() + ":" + std::to_string(port) + ".");
+			Logger::trace("Connection accepted from " + ip_address.to_string() + ":" + std::to_string(port) + ".");
 
 			// Read Request
 			boost::beast::flat_buffer buffer;
@@ -34,30 +49,15 @@ namespace gcd
 			http::write(socket, response);
 		} catch (const boost::system::system_error& e) {
 			if (e.code() == boost::beast::http::error::end_of_stream) {
-				Logger::warning("end_of_stream Error in Socket " + ip_address.to_string() + ":" + std::to_string(port) + ", connection closed.");
+				Logger::info("end of stream @" + ip_address.to_string() + ":" + std::to_string(port) + ".");
 			}
 			else {
-				Logger::error("Boost System Error: " + std::string(e.what()));
+				Logger::warning("Boost System Error in Server::handleRequest @" + ip_address.to_string() + ":" + std::to_string(port) + ": " + std::string(e.what()));
 			}
 		} catch (const std::exception& e) {
 			Logger::error("Exception in Server::handleRequest: " + std::string(e.what()));
 		}
 		socket.shutdown(TcpSocket::shutdown_send);
-		Logger::info("Socket " + ip_address.to_string() + ":" + std::to_string(port) + " closed gracefully.");
-	}
-
-	void Server::run()
-	{
-		boost::asio::io_context io_context;
-		tcp::acceptor acc = m_public ? tcp::acceptor(io_context, { tcp::endpoint(tcp::v4(), m_port) }) : tcp::acceptor(io_context, { tcp::v4(), m_port });
-
-		Logger::info("Listening on port " + std::to_string(m_port));
-		
-		while (true) {
-			TcpSocket socket(io_context);
-			acc.accept(socket);			
-
-			handleRequest(socket);
-		}
+		Logger::trace("Closed connection with " + ip_address.to_string() + ":" + std::to_string(port) + ".");
 	}
 }

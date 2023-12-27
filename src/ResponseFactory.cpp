@@ -52,7 +52,7 @@ namespace gcd
 			response.result(http::status::method_not_allowed);
 			break;
 		case http::verb::get:
-			Logger::info("Received a GET Request for resource: " + target);
+			Logger::trace("Received a GET Request for resource: " + target);
 
 			html << "<!DOCTYPE html><html lang=\"en\"><head><title>Jarvis</title></head><body>";
 			html << "<div><p>Hello Mars!</p></div>";
