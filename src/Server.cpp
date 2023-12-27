@@ -10,7 +10,7 @@ namespace gcd
 {
 	Server::Server(const port_t port/* = 8080 */, const bool isPublic/* = true */) : m_port(port), m_public(isPublic)
 	{
-		Logger::get()->info("Booting up...");
+		Logger::info("Booting up...");
 	}
 
 	void Server::handleRequest(const HttpRequest& request, TcpSocket& socket)
@@ -24,13 +24,13 @@ namespace gcd
 		boost::asio::io_context io_context;
 		tcp::acceptor acc = m_public ? tcp::acceptor(io_context, { tcp::endpoint(tcp::v4(), m_port) }) : tcp::acceptor(io_context, { tcp::v4(), m_port });
 
-		Logger::get()->info("Listening on port " + std::to_string(m_port));
+		Logger::info("Listening on port " + std::to_string(m_port));
 
 		while (true) {
 			try {
 				TcpSocket socket(io_context);
 				acc.accept(socket);
-				Logger::get()->info("Connection accepted.");
+				Logger::info("Connection accepted.");
 
 				// Read the HTTP request
 				boost::beast::flat_buffer buffer;
@@ -42,9 +42,9 @@ namespace gcd
 
 				// Close the socket
 				socket.shutdown(TcpSocket::shutdown_send);
-				Logger::get()->info("Socket closed.");
+				Logger::info("Socket closed.");
 			} catch (std::exception e) {
-				Logger::get()->error("Exception: " + std::string(e.what()));
+				Logger::error("Exception: " + std::string(e.what()));
 			}
 		}
 	}

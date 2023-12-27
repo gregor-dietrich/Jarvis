@@ -22,7 +22,7 @@ namespace gcd
 		case http::verb::delete_:
 			break;
 		case http::verb::get:
-			Logger::get()->info("Received a GET Request...");
+			Logger::info("Received a GET Request...");
 
 			response.set(http::field::content_type, "text/html");
 			response.result(http::status::ok);

@@ -15,18 +15,29 @@
 
 namespace gcd
 {
+	LogLevel Logger::logLevel = LogLevel::ERRORMSG;
+	std::string Logger::logFilePath = {};
+
+	void Logger::createDirectory(const std::string& path)
+	{
+		if (std::filesystem::exists(path)) {
+			return;
+		}
+		std::filesystem::create_directory(path);
+		Logger::info("Log Directory created: " + path);
+	}
+
 	std::string Logger::getTime()
 	{
 		const auto now = std::chrono::system_clock::now();
 		const auto now_time = std::chrono::system_clock::to_time_t(now);
 
-		char buffer[26];
-		ctime_s(buffer, sizeof buffer, &now_time);
-		std::string full = buffer;
-		
-		std::stringstream result;
-		result << full.substr(4, 3) << " " << full.substr(8, 2) << " " << full.substr(20, 4) << ", " << full.substr(11, 8);
-		return result.str();
+		std::tm timeinfo;
+		localtime_s(&timeinfo, &now_time);
+
+		std::stringstream ss;
+		ss << std::put_time(&timeinfo, "%d.%m.%Y %H:%M:%S");
+		return ss.str();
 	}
 
 	std::string Logger::format(const LogLevel messageType, const std::string& message)
@@ -55,7 +66,7 @@ namespace gcd
 #ifdef _WIN32
 		static const auto& H_CONSOLE = GetStdHandle(isError ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE);
 		if (!SetConsoleTextAttribute(H_CONSOLE, static_cast<WORD>(c))) {
-			get()->warning("Failed to change text color for STDERR!", false);
+			warning("Failed to change text color for STDERR!", false);
 		}
 #else
 		if (isError) {
@@ -83,17 +94,35 @@ namespace gcd
 
 	void Logger::log(const std::string& message)
 	{
-		std::ofstream logfile("log.txt", std::ios::app);
+		if (logFilePath.empty()) {
+			return;
+		}
+
+		std::ofstream logfile(logFilePath, std::ios::app);
 		if (!logfile.is_open()) {
-			get()->error("Unable to create/open the logfile.");
+			error("Unable to create/open the logfile.");
 		}
 		logfile << message;
 	}
 
-	std::shared_ptr<Logger> Logger::get()
+	void Logger::init(const std::string& path, const int level)
 	{
-		static const auto instance = std::shared_ptr<Logger>(new Logger);
-		return instance;
+		if (!logFilePath.empty()) {
+			return warning("Prevented Logger re-initialization.");
+		}
+
+		logLevel = static_cast<LogLevel>(level);
+
+		if (path.empty()) {
+			return;
+		}
+
+		auto time = getTime();
+		std::replace(time.begin(), time.end(), ' ', '_');
+		std::replace(time.begin(), time.end(), ':', '.');
+
+		createDirectory(path);
+		logFilePath = path + "/Log_" + time + ".txt";
 	}
 
 	void Logger::info(const std::string& message)
