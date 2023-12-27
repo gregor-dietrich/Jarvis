@@ -38,6 +38,7 @@ namespace gcd
 
 		static LogLevel logLevel;
 		static std::string logFilePath;
+		static bool initialized;
 
 		Logger() = default;
 
@@ -49,7 +50,8 @@ namespace gcd
 		static void print(const LogLevel messageType, const std::string& message);
 		static void log(const std::string& message);
 	public:
-		static void init(const std::string& path, const int level);
+		static bool init(const std::string& path, const int level);
+
 		static void info(const std::string& message);
 		static void warning(const std::string& message, const bool colored = true);
 		static void error(const std::string& message, const bool colored = true);

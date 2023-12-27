@@ -17,6 +17,7 @@ namespace gcd
 {
 	LogLevel Logger::logLevel = LogLevel::ERRORMSG;
 	std::string Logger::logFilePath = {};
+	bool Logger::initialized = false;
 
 	void Logger::createDirectory(const std::string& path)
 	{
@@ -32,7 +33,7 @@ namespace gcd
 		const auto now = std::chrono::system_clock::now();
 		const auto now_time = std::chrono::system_clock::to_time_t(now);
 
-		std::tm timeinfo;
+		std::tm timeinfo{};
 		localtime_s(&timeinfo, &now_time);
 
 		std::stringstream ss;
@@ -80,14 +81,13 @@ namespace gcd
 
 	void Logger::print(const LogLevel messageType, const std::string& message)
 	{
-		const auto formatted = format(messageType, message);
 		switch (messageType) {
 		case LogLevel::INFOMSG:
-			std::cout << formatted;
+			std::cout << message;
 			break;
 		case LogLevel::WARNINGMSG:
 		case LogLevel::ERRORMSG:
-			std::cerr << formatted;
+			std::cerr << message;
 			break;
 		}
 	}
@@ -105,24 +105,26 @@ namespace gcd
 		logfile << message;
 	}
 
-	void Logger::init(const std::string& path, const int level)
+	bool Logger::init(const std::string& path, const int level)
 	{
-		if (!logFilePath.empty()) {
-			return warning("Prevented Logger re-initialization.");
+		if (initialized) {
+			warning("Prevented Logger re-initialization.");
+			false;
 		}
-
+		initialized = true;
 		logLevel = static_cast<LogLevel>(level);
 
 		if (path.empty()) {
-			return;
+			return true;
 		}
+		createDirectory(path);
 
 		auto time = getTime();
 		std::replace(time.begin(), time.end(), ' ', '_');
 		std::replace(time.begin(), time.end(), ':', '.');
 
-		createDirectory(path);
 		logFilePath = path + "/Log_" + time + ".txt";
+		return true;
 	}
 
 	void Logger::info(const std::string& message)
@@ -130,12 +132,13 @@ namespace gcd
 		if (logLevel < LogLevel::INFOMSG) {
 			return;
 		}
+		const auto formatted = format(LogLevel::INFOMSG, message);
 
 		setColor(false, color::green);
-		print(LogLevel::INFOMSG, message);
+		print(LogLevel::INFOMSG, formatted);
 		setColor(false);
 
-		log(format(LogLevel::INFOMSG, message));
+		log(formatted);
 	}
 
 	void Logger::warning(const std::string& message, const bool colored/* = true*/)
@@ -143,20 +146,23 @@ namespace gcd
 		if (logLevel < LogLevel::WARNINGMSG) {
 			return;
 		}
+		const auto formatted = format(LogLevel::WARNINGMSG, message);
 
 		setColor(true, color::yellow);
-		print(LogLevel::WARNINGMSG, message);
+		print(LogLevel::WARNINGMSG, formatted);
 		setColor(true);
 
-		log(format(LogLevel::WARNINGMSG, message));
+		log(formatted);
 	}
 
 	void Logger::error(const std::string& message, const bool colored/* = true*/)
 	{
+		const auto formatted = format(LogLevel::WARNINGMSG, message);
+
 		setColor(true, color::red);
-		print(LogLevel::ERRORMSG, message);
+		print(LogLevel::ERRORMSG, formatted);
 		setColor(true);
 
-		log(format(LogLevel::ERRORMSG, message));
+		log(formatted);
 	}
 }

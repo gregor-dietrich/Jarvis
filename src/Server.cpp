@@ -1,5 +1,4 @@
 #include <iostream>
-#include <sstream>
 #include <string>
 
 #include "Logger.h"
@@ -27,25 +26,22 @@ namespace gcd
 		Logger::info("Listening on port " + std::to_string(m_port));
 
 		while (true) {
-			try {
-				TcpSocket socket(io_context);
-				acc.accept(socket);
-				Logger::info("Connection accepted.");
+			TcpSocket socket(io_context);
+			acc.accept(socket);
 
-				// Read the HTTP request
-				boost::beast::flat_buffer buffer;
-				HttpRequest request;
-				http::read(socket, buffer, request);
+			const tcp::endpoint endpoint = socket.remote_endpoint();
+			const ip::address ip_address = endpoint.address();
+			const port_t port = endpoint.port();
+			Logger::info("Connection accepted from " + ip_address.to_string() + ":" + std::to_string(port) + ".");
 
-				// Handle the request
-				handleRequest(request, socket);
+			boost::beast::flat_buffer buffer;
+			HttpRequest request;
+			http::read(socket, buffer, request);
 
-				// Close the socket
-				socket.shutdown(TcpSocket::shutdown_send);
-				Logger::info("Socket closed.");
-			} catch (std::exception e) {
-				Logger::error("Exception: " + std::string(e.what()));
-			}
+			handleRequest(request, socket);
+
+			socket.shutdown(TcpSocket::shutdown_send);
+			Logger::info("Socket with " + ip_address.to_string() + ":" + std::to_string(port) + " has shut down gracefully.");
 		}
 	}
 }

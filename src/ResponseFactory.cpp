@@ -14,6 +14,7 @@ namespace gcd
 		response.result(http::status::method_not_allowed);
 
 		const http::verb method = request.method();
+		const std::string target = request.target();
 
 		std::stringstream html;
 		switch (request.method()) {
@@ -22,7 +23,7 @@ namespace gcd
 		case http::verb::delete_:
 			break;
 		case http::verb::get:
-			Logger::info("Received a GET Request...");
+			Logger::info("Received a GET Request for resource: " + target);
 
 			response.set(http::field::content_type, "text/html");
 			response.result(http::status::ok);
