@@ -157,7 +157,7 @@ namespace gcd
 
 	void Logger::error(const std::string& message, const bool colored/* = true*/)
 	{
-		const auto formatted = format(LogLevel::WARNINGMSG, message);
+		const auto formatted = format(LogLevel::ERRORMSG, message);
 
 		setColor(true, color::red);
 		print(LogLevel::ERRORMSG, formatted);

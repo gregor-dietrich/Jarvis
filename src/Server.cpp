@@ -1,3 +1,4 @@
+#include <exception>
 #include <iostream>
 #include <string>
 
@@ -12,10 +13,37 @@ namespace gcd
 		Logger::info("Booting up...");
 	}
 
-	void Server::handleRequest(const HttpRequest& request, TcpSocket& socket)
+	void Server::handleRequest(TcpSocket& socket)
 	{
-		const auto response = ResponseFactory::createResponse(request);
-		http::write(socket, response);
+		ip::address ip_address;
+		port_t port;
+		try {
+			const tcp::endpoint endpoint = socket.remote_endpoint();
+			ip_address = endpoint.address();
+			port = endpoint.port();
+
+			Logger::info("Connection accepted from " + ip_address.to_string() + ":" + std::to_string(port) + ".");
+
+			// Read Request
+			boost::beast::flat_buffer buffer;
+			HttpRequest request;
+			http::read(socket, buffer, request);
+
+			// Send Response
+			const auto response = ResponseFactory::createResponse(request);
+			http::write(socket, response);
+		} catch (const boost::system::system_error& e) {
+			if (e.code() == boost::beast::http::error::end_of_stream) {
+				Logger::warning("end_of_stream Error in Socket " + ip_address.to_string() + ":" + std::to_string(port) + ", connection closed.");
+			}
+			else {
+				Logger::error("Boost System Error: " + std::string(e.what()));
+			}
+		} catch (const std::exception& e) {
+			Logger::error("Exception in Server::handleRequest: " + std::string(e.what()));
+		}
+		socket.shutdown(TcpSocket::shutdown_send);
+		Logger::info("Socket " + ip_address.to_string() + ":" + std::to_string(port) + " closed gracefully.");
 	}
 
 	void Server::run()
@@ -24,24 +52,12 @@ namespace gcd
 		tcp::acceptor acc = m_public ? tcp::acceptor(io_context, { tcp::endpoint(tcp::v4(), m_port) }) : tcp::acceptor(io_context, { tcp::v4(), m_port });
 
 		Logger::info("Listening on port " + std::to_string(m_port));
-
+		
 		while (true) {
 			TcpSocket socket(io_context);
-			acc.accept(socket);
+			acc.accept(socket);			
 
-			const tcp::endpoint endpoint = socket.remote_endpoint();
-			const ip::address ip_address = endpoint.address();
-			const port_t port = endpoint.port();
-			Logger::info("Connection accepted from " + ip_address.to_string() + ":" + std::to_string(port) + ".");
-
-			boost::beast::flat_buffer buffer;
-			HttpRequest request;
-			http::read(socket, buffer, request);
-
-			handleRequest(request, socket);
-
-			socket.shutdown(TcpSocket::shutdown_send);
-			Logger::info("Socket with " + ip_address.to_string() + ":" + std::to_string(port) + " has shut down gracefully.");
+			handleRequest(socket);
 		}
 	}
 }
