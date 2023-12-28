@@ -10,11 +10,12 @@ namespace gcd
 	class ResponseFactory
 	{
 		static std::array<std::string, 2> searchStrings;
-		static std::array<std::string, 4> fakeServers;
-		static std::string fakeServer;
+		static std::string serverAlias;
 
 		static std::string sanitize(std::string data);
 	public:
 		static HttpResponse createResponse(const HttpRequest& request);
+
+		static std::string setServerAlias();
 	};
 }

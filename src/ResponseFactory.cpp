@@ -3,19 +3,14 @@
 #include <string>
 
 #include "Logger.h"
-#include "ResponseFactory.h"
 #include "Util.h"
+
+#include "ResponseFactory.h"
 
 namespace gcd
 {
 	std::array<std::string, 2> ResponseFactory::searchStrings = {"..", "%2e%2e"};
-	std::array<std::string, 4> ResponseFactory::fakeServers = {
-		"Apache/2.4.56",
-		"Apache Tomcat/9.0.58",
-		"Microsoft-IIS/10.0",
-		"Nginx/1.14.2"
-	};
-	std::string ResponseFactory::fakeServer;
+	std::string ResponseFactory::serverAlias;
 
 	std::string ResponseFactory::sanitize(std::string data)
 	{
@@ -34,12 +29,7 @@ namespace gcd
 	{
 		HttpResponse response;
 		response.version(request.version());
-
-		if (fakeServer.empty()) {
-			fakeServer = fakeServers[randInt(fakeServers.size())];
-			Logger::info("Using server alias: " + fakeServer);
-		}
-		response.set(http::field::server, fakeServer);
+		response.set(http::field::server, serverAlias);
 
 		const std::string target = request.target();
 		std::stringstream html;
@@ -84,5 +74,47 @@ namespace gcd
 		
 		response.prepare_payload();
 		return response;
+	}
+
+	std::string ResponseFactory::setServerAlias()
+	{
+		const std::array<std::string, 10> fakeOSs = {
+			" (Alpine)",
+			" (Arch Linux)",
+			" (CentOS)",
+			" (Debian)",
+			" (Fedora)",
+			" (Gentoo)",
+			" (openSUSE)",
+			" (RHEL)",
+			" (Ubuntu)",
+			" (Win64)"
+		};
+
+		const std::array<std::string, 15>fakeServers = {
+			"Apache/2.4.41",
+			"Apache/2.4.46",
+			"Apache/2.4.52",
+			"Apache/2.4.54",
+			"Apache/2.4.58",
+			"Apache Tomcat/6.0.53",
+			"Apache Tomcat/7.0.109",
+			"Apache Tomcat/8.5.97",
+			"Apache Tomcat/9.0.84",
+			"Apache Tomcat/10.1.17",
+			/* "Microsoft-IIS/7.0",
+			"Microsoft-IIS/7.5",
+			"Microsoft-IIS/8.0",
+			"Microsoft-IIS/8.5",
+			"Microsoft-IIS/10.0", */
+			"Nginx/1.18.0",
+			"Nginx/1.20.2",
+			"Nginx/1.22.1",
+			"Nginx/1.24.0",
+			"Nginx/1.25.3"
+		};
+
+		serverAlias = fakeServers[randInt(fakeServers.size())] + fakeOSs[randInt(fakeOSs.size())];
+		return serverAlias;
 	}
 }
