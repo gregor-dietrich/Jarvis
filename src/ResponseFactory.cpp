@@ -30,8 +30,9 @@ namespace gcd
 		HttpResponse response;
 		response.version(request.version());
 		response.set(http::field::server, serverAlias);
+		response.result(http::status::ok);
 
-		const std::string target = request.target();
+		const std::string target = request.target().substr(1);
 		std::stringstream html;
 
 		switch (request.method()) {
@@ -45,11 +46,11 @@ namespace gcd
 			Logger::trace("Received a GET Request for resource: " + target);
 
 			html << "<!DOCTYPE html><html lang=\"en\"><head><title>Jarvis</title></head><body>";
-			html << "<div><p>Hello Mars!</p></div>";
+			html << "<div><h1>Error 404</h1><p>File Not Found</p></div>";
 			html << "</body></html>";
 
 			response.set(http::field::content_type, "text/html");
-			response.result(http::status::ok);
+			response.result(http::status::not_found);
 			response.body() = html.str();
 			break;
 		case http::verb::head:

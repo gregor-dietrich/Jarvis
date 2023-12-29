@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Types.h"
 
 namespace gcd
@@ -9,7 +11,8 @@ namespace gcd
 		port_t m_port;
 
 		void handleRequest(TcpSocket& socket);
-		HttpResponse createResponse();
+		std::unique_ptr<HttpRequest> readRequest(TcpSocket& socket);
+		void writeResponse(TcpSocket& socket, const HttpRequest& request);
 	public:
 		Server(const port_t port = 80);
 
