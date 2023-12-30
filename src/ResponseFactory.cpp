@@ -12,71 +12,6 @@ namespace gcd
 	std::array<std::string, 2> ResponseFactory::searchStrings = {"..", "%2e%2e"};
 	std::string ResponseFactory::serverAlias;
 
-	std::string ResponseFactory::sanitize(std::string data)
-	{
-		for (const auto& searchString : searchStrings) {
-			size_t pos = 0;
-			while ((pos = data.find(searchString, pos)) != std::string::npos) {
-				data.replace(pos, searchString.length(), "");
-				pos += searchString.length();
-			}
-		}
-
-		return htmlEntities(data);
-	}
-
-	HttpResponse ResponseFactory::createResponse(const HttpRequest& request)
-	{
-		HttpResponse response;
-		response.version(request.version());
-		response.set(http::field::server, serverAlias);
-		response.result(http::status::ok);
-
-		const std::string target = request.target().substr(1);
-		std::stringstream html;
-
-		switch (request.method()) {
-		case http::verb::connect:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::delete_:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::get:
-			Logger::trace("Received a GET Request for resource: " + target);
-
-			html << "<!DOCTYPE html><html lang=\"en\"><head><title>Jarvis</title></head><body>";
-			html << "<div><h1>Error 404</h1><p>File Not Found</p></div>";
-			html << "</body></html>";
-
-			response.set(http::field::content_type, "text/html");
-			response.result(http::status::not_found);
-			response.body() = html.str();
-			break;
-		case http::verb::head:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::options:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::patch:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::post:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::put:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::trace:
-			response.result(http::status::method_not_allowed);
-			break;
-		}
-		
-		response.prepare_payload();
-		return response;
-	}
-
 	std::string ResponseFactory::setServerAlias()
 	{
 		const std::array<std::string, 10> fakeOSs = {
@@ -117,5 +52,78 @@ namespace gcd
 
 		serverAlias = fakeServers[randInt(fakeServers.size())] + fakeOSs[randInt(fakeOSs.size())];
 		return serverAlias;
+	}
+
+	std::string ResponseFactory::sanitize(std::string data)
+	{
+		for (const auto& searchString : searchStrings) {
+			size_t pos = 0;
+			while ((pos = data.find(searchString, pos)) != std::string::npos) {
+				data.replace(pos, searchString.length(), "");
+				pos += searchString.length();
+			}
+		}
+
+		return htmlEntities(data);
+	}
+
+	HttpResponse ResponseFactory::createResponse(const HttpRequest& request)
+	{
+		HttpResponse response;
+		response.version(request.version());
+		response.set(http::field::server, serverAlias);
+		response.result(http::status::ok);
+
+		const std::string target = sanitize(request.target().substr(1));
+
+		switch (request.method()) {
+		case http::verb::connect:
+			response.result(http::status::method_not_allowed);
+			break;
+		case http::verb::delete_:
+			response.result(http::status::method_not_allowed);
+			break;
+		case http::verb::get:
+			Logger::trace("Received a GET Request for resource: " + target);
+
+			build404(response);
+
+			break;
+		case http::verb::head:
+			response.result(http::status::method_not_allowed);
+			break;
+		case http::verb::options:
+			response.result(http::status::method_not_allowed);
+			break;
+		case http::verb::patch:
+			response.result(http::status::method_not_allowed);
+			break;
+		case http::verb::post:
+			response.result(http::status::method_not_allowed);
+			break;
+		case http::verb::put:
+			response.result(http::status::method_not_allowed);
+			break;
+		case http::verb::trace:
+			response.result(http::status::method_not_allowed);
+			break;
+		}
+		
+		response.prepare_payload();
+		return response;
+	}
+
+	void ResponseFactory::build404(HttpResponse& response)
+	{
+		std::stringstream html;
+
+		html << "<!DOCTYPE html><html lang=\"en\"><head><title>Jarvis</title></head><body>";
+		html << "<div><h1>Error 404</h1><p>Not Found</p></div>";
+		html << "</body></html>";
+
+		response.body() = html.str();
+
+		response.set(http::field::content_type, "text/html");
+		response.result(http::status::not_found);
 	}
 }

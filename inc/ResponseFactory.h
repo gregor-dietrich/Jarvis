@@ -13,6 +13,8 @@ namespace gcd
 		static std::string serverAlias;
 
 		static std::string sanitize(std::string data);
+
+		static void build404(HttpResponse& response);
 	public:
 		static HttpResponse createResponse(const HttpRequest& request);
 
