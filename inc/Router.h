@@ -15,7 +15,7 @@ namespace Jarvis
 {
 	class Router
 	{
-		static std::unordered_map<std::string, std::unordered_set<std::string>> m_fileRoutes;
+		static std::unordered_map<std::string, std::unordered_map<std::string, std::string>> m_fileRoutes;
 
 		static pt::ptree parseFile(const std::string& filename);
 	public:

@@ -7,7 +7,7 @@
 
 namespace Jarvis
 {
-	std::unordered_map<std::string, std::unordered_set<std::string>> Router::m_fileRoutes;
+	std::unordered_map<std::string, std::unordered_map<std::string, std::string>> Router::m_fileRoutes;
 
 	pt::ptree Router::parseFile(const std::string& filename)
 	{
@@ -20,20 +20,22 @@ namespace Jarvis
 	{
 		try {
 			for (const auto& routePath : parseFile("cfg/fileRoutes.json")) {
-				m_fileRoutes[routePath.first];
 				for (const auto& fileExtension : routePath.second) {
-					m_fileRoutes[routePath.first].insert(fileExtension.second.data());
+					for (const auto& kv : fileExtension.second) {
+						m_fileRoutes[routePath.first][kv.first] = kv.second.data();
+					}
 				}
 			}
-		} catch (const std::exception& e) {
+		}
+		catch (const std::exception& e) {
 			Logger::error("Router::init(): " + std::string(e.what()));
 			return false;
 		}
 
 		for (const auto& fileRoute : m_fileRoutes) {
 			Logger::print(fileRoute.first + ": ");
-			for (const auto& item : m_fileRoutes[fileRoute.first]) {
-				Logger::print(item);
+			for (const auto& item : fileRoute.second) {
+				Logger::print(item.first + ", " + item.second);
 			}
 		}
 
@@ -63,7 +65,7 @@ namespace Jarvis
 					if (offset == std::string::npos) {
 						continue;
 					}
-					if (fileName.substr(offset + 1) == fileExtension) {
+					if (fileName.substr(offset + 1) == fileExtension.first) {
 						return std::filesystem::exists(route);
 					}
 				}

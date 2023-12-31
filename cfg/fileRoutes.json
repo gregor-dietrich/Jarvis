@@ -1,5 +1,21 @@
 {
-  "css": [ "css" ],
-  "js": [ "js" ],
-  "img": [ "gif", "jpg", "jpeg", "png" ]
+  "css": [
+    {
+      "css": "text/css"
+    }
+  ],
+  "js": [
+    {
+      "js": "application/javascript; charset=utf-8"
+    }
+  ],
+  "img": [
+    {
+      "gif": "image/gif",
+      "ico": "image/png",
+      "jpg": "image/jpeg",
+      "jpeg": "image/jpeg",
+      "png": "image/png"
+    }
+  ]
 }
