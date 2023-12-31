@@ -28,7 +28,6 @@ namespace gcd
 		buffer.reserve(data.size());
 
 		for (const char& pos : data) {
-			if (pos == '\0') continue;
 
 			switch (pos) {
 			case '&':  buffer.append("&amp;");       break;

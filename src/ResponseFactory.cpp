@@ -57,14 +57,9 @@ namespace gcd
 	std::string ResponseFactory::sanitize(std::string data)
 	{
 		for (const auto& searchString : searchStrings) {
-			size_t pos = 0;
-			while ((pos = data.find(searchString, pos)) != std::string::npos) {
-				data.replace(pos, searchString.length(), "");
-				pos += searchString.length();
-			}
+			replaceSubString(data, searchString, "");
 		}
-
-		return htmlEntities(data);
+		return data;
 	}
 
 	HttpResponse ResponseFactory::createResponse(const HttpRequest& request)

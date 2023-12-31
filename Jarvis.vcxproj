@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\JSONReader.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\ResponseFactory.cpp" />
     <ClCompile Include="main.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="inc\Types.h" />
     <ClInclude Include="inc\ResponseFactory.h" />
     <ClInclude Include="inc\Util.h" />
+    <ClInclude Include="inc\JSONReader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
