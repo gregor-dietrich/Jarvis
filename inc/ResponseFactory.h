@@ -5,7 +5,7 @@
 
 #include "Types.h"
 
-namespace gcd
+namespace Jarvis
 {
 	class ResponseFactory
 	{

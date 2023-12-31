@@ -5,14 +5,14 @@
 
 #include "Types.h"
 
-namespace gcd
+namespace Jarvis
 {
 	class Server
 	{
 		port_t m_port;
 		bool m_alive;
 		std::shared_ptr<boost::asio::io_context> m_ioContext;
-		std::shared_ptr<tcp::acceptor> m_acceptor;
+		std::unique_ptr<tcp::acceptor> m_acceptor;
 
 		void handleRequest(TcpSocket& socket);
 		std::unique_ptr<HttpRequest> readRequest(TcpSocket& socket);

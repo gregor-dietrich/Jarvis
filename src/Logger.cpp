@@ -14,7 +14,7 @@
 #include <unistd.h>
 #endif
 
-namespace gcd
+namespace Jarvis
 {
 	LogLevel Logger::logLevel = LogLevel::ERRORMSG;
 	std::string Logger::logFilePath = {};

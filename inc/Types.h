@@ -7,7 +7,7 @@
 #include <boost/asio.hpp>
 #include <boost/beast.hpp>
 
-namespace gcd
+namespace Jarvis
 {
 	namespace http = boost::beast::http;
 	using HttpResponse = http::response<http::string_body>;

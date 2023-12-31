@@ -6,7 +6,7 @@
 #include <memory>
 #include <string>
 
-namespace gcd
+namespace Jarvis
 {
 	enum class LogLevel : uint16_t {
 		ERRORMSG,

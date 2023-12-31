@@ -3,11 +3,12 @@
 #include <string>
 
 #include "Logger.h"
+#include "Router.h"
 #include "Util.h"
 
 #include "ResponseFactory.h"
 
-namespace gcd
+namespace Jarvis
 {
 	std::array<std::string, 2> ResponseFactory::searchStrings = {"..", "%2e%2e"};
 	std::string ResponseFactory::serverAlias;
@@ -67,7 +68,6 @@ namespace gcd
 		HttpResponse response;
 		response.version(request.version());
 		response.set(http::field::server, serverAlias);
-		response.result(http::status::ok);
 
 		const std::string target = sanitize(request.target().substr(1));
 
@@ -81,8 +81,12 @@ namespace gcd
 		case http::verb::get:
 			Logger::trace("Received a GET Request for resource: " + target);
 
-			build404(response);
+			if (!Router::routeExists(target)) {
+				build404(response);
+				break;
+			}
 
+			response.result(http::status::ok);
 			break;
 		case http::verb::head:
 			response.result(http::status::method_not_allowed);

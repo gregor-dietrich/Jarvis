@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="cfg">
+      <UniqueIdentifier>{9728d5bf-081d-4482-94a1-f53eadef52bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Server.cpp">
@@ -27,7 +30,7 @@
     <ClCompile Include="src\Logger.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\JSONReader.cpp">
+    <ClCompile Include="src\Router.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,8 +50,16 @@
     <ClInclude Include="inc\Util.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="inc\JSONReader.h">
+    <ClInclude Include="inc\Router.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cfg\fileRoutes.json">
+      <Filter>cfg</Filter>
+    </None>
+    <None Include="cfg\contentRoutes.json">
+      <Filter>cfg</Filter>
+    </None>
   </ItemGroup>
 </Project>

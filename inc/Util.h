@@ -5,7 +5,7 @@
 
 #include "Types.h"
 
-namespace gcd
+namespace Jarvis
 {
 	inline size_t randInt(const size_t min, const size_t max)
 	{

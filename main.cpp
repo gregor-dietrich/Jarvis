@@ -4,9 +4,9 @@
 
 #include "Logger.h"
 #include "Server.h"
-#include <Util.h>
+#include "Util.h"
 
-using namespace gcd;
+using namespace Jarvis;
 
 struct CLArgs
 {
@@ -14,7 +14,6 @@ struct CLArgs
 	port_t port = 80;
 	LogLevel logLevel = LogLevel::MINLEVEL;
 };
-
 
 CLArgs parseArgs(int argc, char** argv)
 {

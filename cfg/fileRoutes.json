@@ -1,0 +1,5 @@
+{
+  "css": [ "css" ],
+  "js": [ "js" ],
+  "img": [ "gif", "jpg", "jpeg", "png" ]
+}
