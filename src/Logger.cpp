@@ -121,14 +121,14 @@ namespace gcd
 		logfile << message;
 	}
 
-	bool Logger::init(const std::string& path, const int level)
+	bool Logger::init(const std::string& path, const LogLevel level)
 	{
 		if (initialized) {
 			warning("Prevented Logger re-initialization.");
 			false;
 		}
 		initialized = true;
-		logLevel = static_cast<LogLevel>(level);
+		logLevel = level;
 
 		if (path.empty()) {
 			return true;
@@ -183,9 +183,13 @@ namespace gcd
 		}
 		const auto formatted = format(LogLevel::WARNINGMSG, message);
 
-		setColor(true, color::yellow);
+		if (colored) {
+			setColor(true, color::yellow);
+		}
 		print(LogLevel::WARNINGMSG, formatted);
-		setColor(true);
+		if (colored) {
+			setColor(true);
+		}
 
 		log(formatted);
 	}

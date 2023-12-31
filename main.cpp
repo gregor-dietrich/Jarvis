@@ -4,14 +4,15 @@
 
 #include "Logger.h"
 #include "Server.h"
+#include <Util.h>
 
 using namespace gcd;
 
 struct CLArgs
 {
 	std::string logDir;
-	int logLevel = static_cast<int>(LogLevel::MINLEVEL);
-	int port = 80;
+	port_t port = 80;
+	LogLevel logLevel = LogLevel::MINLEVEL;
 };
 
 
@@ -29,15 +30,16 @@ CLArgs parseArgs(int argc, char** argv)
 			result.logDir = argv[++i];
 			continue;
 		}
-
+		
 		try {
 			if (arg == "-logLevel") {
-				result.logLevel = std::max(result.logLevel, std::min(static_cast<int>(LogLevel::MAXLEVEL), std::stoi(argv[++i])));
+				result.logLevel = static_cast<LogLevel>(std::max(static_cast<int>(LogLevel::MINLEVEL), 
+																std::min(static_cast<int>(LogLevel::MAXLEVEL), std::stoi(argv[++i]))));
 				continue;
 			}
 
 			if (arg == "-port") {
-				result.port = std::stoi(argv[++i]);
+				result.port = static_cast<port_t>(std::stoi(argv[++i]));
 				continue;
 			}
 		}
@@ -62,7 +64,18 @@ int main(int argc, char** argv)
 		Logger::error("Hello Mars!\n");*/
 
 		Server server(args.port);
-		server.run();
+		std::thread serverThread(&Server::run, &server);
+
+		while (true) {
+			std::string input;
+			std::getline(std::cin, input);
+			if (input == "quit") {
+				server.quit();
+				serverThread.join();
+				break;
+			}
+			Logger::error("Command not recognized: " + input + ". Please try again.");
+		}
 	}
 	catch (const std::exception& e) {
 		Logger::error("Exception in main(): " + std::string(e.what()));

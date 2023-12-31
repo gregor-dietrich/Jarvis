@@ -10,44 +10,61 @@
 
 namespace gcd
 {
-	Server::Server(const port_t port/* = 80 */) : m_port(port)
+	Server::Server(const port_t port/* = 80 */) : m_port(port), m_alive(true)
 	{
 		Logger::trace("Booting...");
 
+		m_ioContext = std::make_shared<boost::asio::io_context>();
+		m_acceptor = std::make_shared<tcp::acceptor>(*m_ioContext, tcp::endpoint(tcp::v4(), m_port));
+
 		Logger::info("Using Alias: " + ResponseFactory::setServerAlias());
+		Logger::print("Listening on port " + std::to_string(m_port));
 	}
 
 	void Server::run()
 	{
-		boost::asio::io_context io_context;
-		tcp::acceptor acc = tcp::acceptor(io_context, { tcp::endpoint(tcp::v4(), m_port) });
-
-		Logger::print("Listening on port " + std::to_string(m_port));
-
-		while (true) {
-			TcpSocket socket(io_context);
-			acc.accept(socket);
-			handleRequest(socket);
+		while (m_alive) {
+			try {
+				TcpSocket socket(*m_ioContext);
+				m_acceptor->accept(socket);
+				handleRequest(socket);
+			}
+			catch (const boost::system::system_error& e) {
+				if (m_alive) {
+					Logger::error("Server::run(): " + std::string(e.what()));
+				}
+			}
+			catch (const std::exception& e) {
+				Logger::error("Server::run(): " + std::string(e.what()));
+			}
 		}
+	}
 
+	void Server::quit()
+	{
 		Logger::trace("Shutting down...");
+		m_alive = false;
+		m_ioContext->stop();
+		m_acceptor->close();
 	}
 
 	void Server::handleRequest(TcpSocket& socket)
 	{
-		std::string connection;
+		const auto connection = toString(socket);
 
 		try {
-			const tcp::endpoint endpoint = socket.remote_endpoint();
-			connection = endpoint.address().to_string() + ":" + std::to_string(endpoint.port());
 			Logger::trace("Connection established with " + connection);
 
 			const auto request = readRequest(socket);
 			if (request != nullptr) {
 				Logger::trace("Read request from " + connection);
 
-				writeResponse(socket, *request);
-				Logger::trace("Sent response to " + connection);
+				const auto statusCode = writeResponse(socket, *request);
+				if (statusCode == -1) {
+					Logger::error("Failed to send response to " + connection);
+				} else {
+					Logger::trace("Sent response with status " + std::to_string(statusCode) + " to " + connection);
+				}
 			}
 
 			socket.shutdown(TcpSocket::shutdown_send);
@@ -65,19 +82,26 @@ namespace gcd
 			http::read(socket, buffer, *request);
 			return request;
 		} catch (const boost::system::system_error& e) {
-			const auto what = "Server::writeResponse: " + std::string(e.what());
 			if (e.code() == http::error::end_of_stream) {
-				Logger::info(what);
+				Logger::info("end of stream");
 				return nullptr;
 			}
-			Logger::warning(what);
+			Logger::error("Server::readRequest(): " + std::string(e.what()));
+		} catch (const std::exception& e) {
+			Logger::error("Server::readRequest(): " + std::string(e.what()));
 		}
 		return nullptr;
 	}
 
-	void Server::writeResponse(TcpSocket& socket, const HttpRequest& request)
+	int16_t Server::writeResponse(TcpSocket& socket, const HttpRequest& request)
 	{
-		const auto response = ResponseFactory::createResponse(request);
-		http::write(socket, response);
+		try {
+			const auto response = ResponseFactory::createResponse(request);
+			http::write(socket, response);
+			return static_cast<int16_t>(response.result());
+		} catch (const std::exception& e) {
+			Logger::error("Server::writeResponse(): " + std::string(e.what()));
+			return -1;
+		}
 	}
 }

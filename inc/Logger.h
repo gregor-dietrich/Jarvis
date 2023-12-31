@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <memory>
@@ -7,7 +8,7 @@
 
 namespace gcd
 {
-	enum class LogLevel {
+	enum class LogLevel : uint16_t {
 		ERRORMSG,
 		WARNINGMSG,
 		INFOMSG,
@@ -19,7 +20,7 @@ namespace gcd
 
 	class Logger
 	{
-		enum class color {
+		enum class color : uint16_t {
 #ifdef _WIN32
 			red = 4,
 			green = 2,
@@ -62,7 +63,7 @@ namespace gcd
 		static void print(const LogLevel messageType, const std::string& message);
 		static void log(const std::string& message);
 	public:
-		static bool init(const std::string& path, const int level);
+		static bool init(const std::string& path, const LogLevel level);
 
 		static void trace(const std::string& message);
 		static void info(const std::string& message);
