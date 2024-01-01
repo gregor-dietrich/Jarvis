@@ -2,6 +2,8 @@
 #include <sstream>
 #include <string>
 
+#include <boost/algorithm/string.hpp>
+
 #include "Logger.h"
 #include "Router.h"
 #include "Util.h"
@@ -63,14 +65,27 @@ namespace Jarvis
 		return data;
 	}
 
-	HttpResponse ResponseFactory::createResponse(const HttpRequest& request)
+	http::status ResponseFactory::createResponse(TcpSocket& socket, const HttpRequest& request)
 	{
-		HttpResponse response;
-		response.version(request.version());
-		response.set(http::field::server, serverAlias);
-
 		const std::string target = sanitize(request.target().substr(1));
 
+		if (!Router::routeExists(target)) {
+			const auto response = build404Response(request);
+			http::write(socket, response);
+			return response.result();
+		}
+
+		auto response = buildFileResponse(target, request.version());
+		boost::beast::error_code ec;
+		http::serializer<false, http::file_body, http::fields> sr{ response };
+		http::write(socket, sr, ec);
+		if (ec) {
+			Logger::error("createResponse(): " + ec.message());
+			response.result(http::status::internal_server_error);
+		}
+		return response.result();
+		
+		/*
 		switch (request.method()) {
 		case http::verb::connect:
 			response.result(http::status::method_not_allowed);
@@ -80,12 +95,6 @@ namespace Jarvis
 			break;
 		case http::verb::get:
 			Logger::trace("Received a GET Request for resource: " + target);
-
-			if (!Router::routeExists(target)) {
-				build404(response);
-				break;
-			}
-
 			response.result(http::status::ok);
 			break;
 		case http::verb::head:
@@ -107,22 +116,44 @@ namespace Jarvis
 			response.result(http::status::method_not_allowed);
 			break;
 		}
-		
+		*/
+	}
+
+	HttpStringResponse ResponseFactory::build404Response(const HttpRequest& request)
+	{
+		HttpStringResponse response;
+		response.version(request.version());
+		response.set(http::field::server, serverAlias);
+		response.set(http::field::content_type, "text/html");
+		response.result(http::status::not_found);
+
+		std::stringstream html;
+		html << "<!DOCTYPE html><html lang=\"en\"><head><title>Jarvis</title></head><body>";
+		html << "<div><h1>Error 404</h1><p>Not Found</p></div>";
+		html << "</body></html>";
+		response.body() = html.str();
+
 		response.prepare_payload();
 		return response;
 	}
 
-	void ResponseFactory::build404(HttpResponse& response)
+	HttpFileResponse ResponseFactory::buildFileResponse(const std::string& target, const unsigned int version)
 	{
-		std::stringstream html;
+		HttpFileResponse response;
+		response.version(version);
+		response.set(http::field::server, serverAlias);
+		response.set(http::field::content_type, Router::getMimeType(target));
+		response.result(http::status::ok);
 
-		html << "<!DOCTYPE html><html lang=\"en\"><head><title>Jarvis</title></head><body>";
-		html << "<div><h1>Error 404</h1><p>Not Found</p></div>";
-		html << "</body></html>";
+		boost::beast::error_code ec;
+		response.body().open(target.c_str(), boost::beast::file_mode::scan, ec);
 
-		response.body() = html.str();
-
-		response.set(http::field::content_type, "text/html");
-		response.result(http::status::not_found);
+		if (ec) {
+			Logger::error("buildFileResponse(): " + ec.message());
+			response.result(http::status::internal_server_error);
+		}
+		
+		response.prepare_payload();
+		return response;
 	}
 }

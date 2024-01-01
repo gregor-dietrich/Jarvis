@@ -98,9 +98,8 @@ namespace Jarvis
 	int16_t Server::writeResponse(TcpSocket& socket, const HttpRequest& request)
 	{
 		try {
-			const auto response = ResponseFactory::createResponse(request);
-			http::write(socket, response);
-			return static_cast<int16_t>(response.result());
+			const auto statusCode = ResponseFactory::createResponse(socket, request);
+			return static_cast<int16_t>(statusCode);
 		} catch (const std::exception& e) {
 			Logger::error("Server::writeResponse(): " + std::string(e.what()));
 			return -1;

@@ -14,9 +14,10 @@ namespace Jarvis
 
 		static std::string sanitize(std::string data);
 
-		static void build404(HttpResponse& response);
+		static HttpStringResponse build404Response(const HttpRequest& request);
+		static HttpFileResponse buildFileResponse(const std::string& target, const unsigned int version);
 	public:
-		static HttpResponse createResponse(const HttpRequest& request);
+		static http::status createResponse(TcpSocket& socket, const HttpRequest& request);
 
 		static std::string setServerAlias();
 	};

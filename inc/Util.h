@@ -28,15 +28,14 @@ namespace Jarvis
 		buffer.reserve(data.size());
 
 		for (const char& pos : data) {
-
 			switch (pos) {
-			case '&':  buffer.append("&amp;");       break;
-			case '\"': buffer.append("&quot;");      break;
-			case '\'': buffer.append("&apos;");      break;
-			case '<':  buffer.append("&lt;");        break;
-			case '>':  buffer.append("&gt;");        break;
+			case '&':  buffer.append("&amp;");		break;
+			case '\"': buffer.append("&quot;");     break;
+			case '\'': buffer.append("&apos;");     break;
+			case '<':  buffer.append("&lt;");       break;
+			case '>':  buffer.append("&gt;");       break;
 
-			default:   buffer.append(&pos, 1); break;
+			default:   buffer.append(&pos, 1);		break;
 			}
 		}
 

@@ -21,5 +21,6 @@ namespace Jarvis
 	public:
 		static bool init();
 		static bool routeExists(std::string route);
+		static std::string getMimeType(const std::string& target);
 	};
 }

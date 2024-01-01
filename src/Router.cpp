@@ -75,4 +75,13 @@ namespace Jarvis
 		}
 		return false;
 	}
+
+	std::string Router::getMimeType(const std::string& target)
+	{
+		std::vector<std::string> result;
+		boost::split(result, target, boost::is_any_of("/"));
+		const auto& fileName = result[result.size() - 1];
+		const auto& fileExtension = fileName.substr(fileName.find('.') + 1);
+		return m_fileRoutes[result[0]][fileExtension];
+	}
 }

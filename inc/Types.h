@@ -10,7 +10,8 @@
 namespace Jarvis
 {
 	namespace http = boost::beast::http;
-	using HttpResponse = http::response<http::string_body>;
+	using HttpStringResponse = http::response<http::string_body>;
+	using HttpFileResponse = http::response<http::file_body>;
 	using HttpRequest = http::request<http::string_body>;
 
 	namespace ip = boost::asio::ip;
