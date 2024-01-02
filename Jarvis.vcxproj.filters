@@ -58,8 +58,5 @@
     <None Include="cfg\fileRoutes.json">
       <Filter>cfg</Filter>
     </None>
-    <None Include="cfg\contentRoutes.json">
-      <Filter>cfg</Filter>
-    </None>
   </ItemGroup>
 </Project>

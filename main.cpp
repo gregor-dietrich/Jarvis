@@ -56,12 +56,12 @@ int main(int argc, char** argv)
 	try {
 		const auto args = parseArgs(argc, argv);
 		Logger::init(args.logDir, args.logLevel);
-
-		/*Logger::trace("Hello World!");
+		/*
+		Logger::trace("Hello World!");
 		Logger::info("Hello Earth!");
 		Logger::warning("Hello Venus!");
-		Logger::error("Hello Mars!\n");*/
-
+		Logger::error("Hello Mars!\n");
+		*/
 		Server server(args.port);
 		std::thread serverThread(&Server::run, &server);
 
