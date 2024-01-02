@@ -15,7 +15,7 @@ struct CLArgs
 	LogLevel logLevel = LogLevel::MINLEVEL;
 };
 
-CLArgs parseArgs(int argc, char** argv)
+static CLArgs parseArgs(int argc, char** argv)
 {
 	CLArgs result;
 
