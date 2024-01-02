@@ -20,7 +20,7 @@ namespace Jarvis
 		static pt::ptree parseFile(const std::string& filename);
 	public:
 		static bool init();
-		static bool routeExists(std::string route);
+		static bool fileRouteExists(std::string route);
 		static std::string getMimeType(const std::string& target);
 	};
 }

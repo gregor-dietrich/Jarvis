@@ -2,6 +2,7 @@
 
 #include <array>
 #include <string>
+#include <unordered_map>
 
 #include "Types.h"
 
@@ -14,7 +15,9 @@ namespace Jarvis
 
 		static std::string sanitize(std::string data);
 
-		static HttpStringResponse build404Response(const HttpRequest& request);
+		static http::status createGETResponse(TcpSocket& socket, const HttpRequest& request);
+
+		static HttpStringResponse buildErrorResponse(const http::status statusCode, const unsigned int version);
 		static HttpFileResponse buildFileResponse(const std::string& target, const unsigned int version);
 	public:
 		static http::status createResponse(TcpSocket& socket, const HttpRequest& request);

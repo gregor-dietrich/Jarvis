@@ -57,79 +57,78 @@ namespace Jarvis
 		return serverAlias;
 	}
 
+	http::status ResponseFactory::createResponse(TcpSocket& socket, const HttpRequest& request)
+	{
+		HttpStringResponse response;
+
+		switch (request.method()) {
+		case http::verb::get:
+			return createGETResponse(socket, request);
+		case http::verb::connect:
+		case http::verb::delete_:
+		case http::verb::head:
+		case http::verb::options:
+		case http::verb::patch:
+		case http::verb::post:
+		case http::verb::put:
+		case http::verb::trace:
+		default:
+			response = buildErrorResponse(http::status::method_not_allowed, request.version());
+			break;
+		}
+		
+		return response.result();
+	}
+
 	std::string ResponseFactory::sanitize(std::string data)
 	{
 		for (const auto& searchString : searchStrings) {
 			replaceSubString(data, searchString, "");
 		}
+
+		replaceSubString(data, "%20", " ");
 		return data;
 	}
 
-	http::status ResponseFactory::createResponse(TcpSocket& socket, const HttpRequest& request)
+	http::status ResponseFactory::createGETResponse(TcpSocket& socket, const HttpRequest& request)
 	{
 		const std::string target = sanitize(request.target().substr(1));
+		Logger::trace("Received a GET Request for resource: " + target);
 
-		if (!Router::routeExists(target)) {
-			const auto response = build404Response(request);
-			http::write(socket, response);
-			return response.result();
+		if (Router::fileRouteExists(target)) {
+			try {
+				auto fileResponse = buildFileResponse(target, request.version());
+				boost::beast::error_code ec;
+				http::serializer<false, http::file_body, http::fields> sr{ fileResponse };
+				http::write(socket, sr, ec);
+				if (ec) {
+					throw std::exception(ec.message().c_str());
+				}
+				return fileResponse.result();
+			} catch (const std::exception& e) {
+				Logger::error("createGETResponse(): " + std::string(e.what()));
+				const auto response = buildErrorResponse(http::status::internal_server_error, request.version());
+				http::write(socket, response);
+				return response.result();
+			}
 		}
 
-		auto response = buildFileResponse(target, request.version());
-		boost::beast::error_code ec;
-		http::serializer<false, http::file_body, http::fields> sr{ response };
-		http::write(socket, sr, ec);
-		if (ec) {
-			Logger::error("createResponse(): " + ec.message());
-			response.result(http::status::internal_server_error);
-		}
+		const auto response = buildErrorResponse(http::status::not_found, request.version());
+		http::write(socket, response);
 		return response.result();
-		
-		/*
-		switch (request.method()) {
-		case http::verb::connect:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::delete_:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::get:
-			Logger::trace("Received a GET Request for resource: " + target);
-			response.result(http::status::ok);
-			break;
-		case http::verb::head:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::options:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::patch:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::post:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::put:
-			response.result(http::status::method_not_allowed);
-			break;
-		case http::verb::trace:
-			response.result(http::status::method_not_allowed);
-			break;
-		}
-		*/
 	}
 
-	HttpStringResponse ResponseFactory::build404Response(const HttpRequest& request)
+	HttpStringResponse ResponseFactory::buildErrorResponse(const http::status statusCode, const unsigned int version)
 	{
 		HttpStringResponse response;
-		response.version(request.version());
+		response.version(version);
 		response.set(http::field::server, serverAlias);
 		response.set(http::field::content_type, "text/html");
-		response.result(http::status::not_found);
+		response.result(statusCode);
 
 		std::stringstream html;
 		html << "<!DOCTYPE html><html lang=\"en\"><head><title>Jarvis</title></head><body>";
-		html << "<div><h1>Error 404</h1><p>Not Found</p></div>";
+		html << "<div><h1>Error " << static_cast<int>(statusCode) << "</h1><p>" << statusCode << "</p></div>";
 		html << "</body></html>";
 		response.body() = html.str();
 

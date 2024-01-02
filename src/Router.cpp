@@ -42,7 +42,7 @@ namespace Jarvis
 		return true;
 	}
 
-	bool Router::routeExists(std::string route)
+	bool Router::fileRouteExists(std::string route)
 	{
 		try {
 			size_t pos = route.find("?");
