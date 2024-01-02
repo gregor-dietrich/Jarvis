@@ -145,7 +145,7 @@ namespace Jarvis
 		response.result(http::status::ok);
 
 		boost::beast::error_code ec;
-		response.body().open(target.c_str(), boost::beast::file_mode::scan, ec);
+		response.body().open(Router::getLocalPath(target).c_str(), boost::beast::file_mode::scan, ec);
 
 		if (ec) {
 			Logger::error("buildFileResponse(): " + ec.message());

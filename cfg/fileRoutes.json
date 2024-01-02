@@ -1,21 +1,30 @@
 {
-  "css": [
-    {
-      "css": "text/css"
-    }
-  ],
-  "js": [
-    {
-      "js": "application/javascript"
-    }
-  ],
-  "img": [
-    {
-      "gif": "image/gif",
-      "ico": "image/png",
-      "jpg": "image/jpeg",
-      "jpeg": "image/jpeg",
-      "png": "image/png"
-    }
-  ]
+  "css": {
+    "localPath": "public/css",
+    "fileExtensions": [
+      {
+        "css": "text/css"
+      }
+    ]
+  },
+  "js": {
+    "localPath": "public/js",
+    "fileExtensions": [
+      {
+        "js": "application/javascript"
+      }
+    ]
+  },
+  "img": {
+    "localPath": "public/img",
+    "fileExtensions": [
+      {
+        "gif": "image/gif",
+        "ico": "image/png",
+        "jpg": "image/jpeg",
+        "jpeg": "image/jpeg",
+        "png": "image/png"
+      }
+    ]
+  }
 }
