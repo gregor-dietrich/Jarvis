@@ -46,6 +46,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
+    # install dependencies
+    - name: boost
+      run: sudo apt-get update && sudo apt-get install -yq libboost1.65-dev
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
