@@ -136,7 +136,7 @@
     <ClCompile Include="src\Router.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\ResponseFactory.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\Jarvis.cpp" />
     <ClCompile Include="src\Server.cpp" />
   </ItemGroup>
   <ItemGroup>

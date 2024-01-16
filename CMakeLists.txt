@@ -13,7 +13,7 @@ set(SOURCES
     src/ResponseFactory.cpp
     src/Router.cpp
     src/Server.cpp
-    main.cpp
+    src/Jarvis.cpp
 )
 
 add_executable(Jarvis ${SOURCES})
