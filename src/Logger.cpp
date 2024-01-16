@@ -129,7 +129,7 @@ namespace Jarvis
 	{
 		if (initialized) {
 			warning("Prevented Logger re-initialization.");
-			false;
+			return false;
 		}
 		initialized = true;
 		logLevel = level;
