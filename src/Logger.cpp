@@ -35,7 +35,11 @@ namespace Jarvis
 		const auto now_time = std::chrono::system_clock::to_time_t(now);
 
 		std::tm timeinfo{};
-		localtime_s(&timeinfo, &now_time);
+#ifdef _WIN32
+    	localtime_s(&timeinfo, &now_time);
+#else
+    	localtime_r(&now_time, &timeinfo);
+#endif
 
 		std::stringstream ss;
 		ss << std::put_time(&timeinfo, "%d.%m.%Y %H:%M:%S");
@@ -86,10 +90,10 @@ namespace Jarvis
 		}
 #else
 		if (isError) {
-			std::cerr << "\033[" << c << "m";
+			std::cerr << "\033[" << static_cast<int>(c) << "m";
 		}
 		else {	
-			std::cout << "\033[" << c << "m";
+			std::cout << "\033[" << static_cast<int>(c) << "m";
 		}
 #endif
 	}

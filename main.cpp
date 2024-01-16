@@ -78,13 +78,13 @@ int main(int argc, char** argv)
 	}
 	catch (const std::exception& e) {
 		Logger::error("Exception in main(): " + std::string(e.what()));
-		return EXIT_PROCESS_DEBUG_EVENT;
+		return 1;
 	}
 	catch (...) {
 		Logger::error("Something went horribly wrong in main()...");
-		return EXIT_FAILURE;
+		return 2;
 	}
 
 	Logger::info("Shut down gracefully.");
-	return EXIT_SUCCESS;
+	return 0;
 }

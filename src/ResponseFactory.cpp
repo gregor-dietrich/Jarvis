@@ -102,7 +102,7 @@ namespace Jarvis
 				http::serializer<false, http::file_body, http::fields> sr{ fileResponse };
 				http::write(socket, sr, ec);
 				if (ec) {
-					throw std::exception(ec.message().c_str());
+					throw std::runtime_error(ec.message().c_str());
 				}
 				return fileResponse.result();
 			} catch (const std::exception& e) {
