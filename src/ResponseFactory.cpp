@@ -1,6 +1,5 @@
 #include <iostream>
 #include <sstream>
-#include <string>
 
 #include <boost/algorithm/string.hpp>
 
@@ -14,6 +13,7 @@ namespace Jarvis
 {
 	std::array<std::string, 2> ResponseFactory::searchStrings = {"..", "%2e%2e"};
 	std::string ResponseFactory::serverAlias;
+	std::regex ResponseFactory::pattern("[^a-zA-Z0-9-_. ?=/]");
 
 	std::string ResponseFactory::setServerAlias()
 	{
@@ -80,19 +80,20 @@ namespace Jarvis
 		return response.result();
 	}
 
-	std::string ResponseFactory::sanitize(std::string data)
+	void ResponseFactory::sanitize(std::string& data)
 	{
 		for (const auto& searchString : searchStrings) {
 			replaceSubString(data, searchString, "");
 		}
-
 		replaceSubString(data, "%20", " ");
-		return data;
+
+		data = std::regex_replace(data, pattern, "");
 	}
 
 	http::status ResponseFactory::createGETResponse(TcpSocket& socket, const HttpRequest& request)
 	{
-		const std::string target = sanitize(request.target().substr(1));
+		std::string target = request.target().substr(1);
+		sanitize(target);
 		Logger::trace("Received a GET Request for resource: " + target);
 
 		if (Router::fileRouteExists(target)) {

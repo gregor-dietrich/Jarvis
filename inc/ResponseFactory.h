@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <regex>
 #include <string>
 #include <unordered_map>
 
@@ -12,8 +13,9 @@ namespace Jarvis
 	{
 		static std::array<std::string, 2> searchStrings;
 		static std::string serverAlias;
+		static std::regex pattern;
 
-		static std::string sanitize(std::string data);
+		static void sanitize(std::string& data);
 
 		static http::status createGETResponse(TcpSocket& socket, const HttpRequest& request);
 
