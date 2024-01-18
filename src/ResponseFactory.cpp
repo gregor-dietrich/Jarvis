@@ -13,7 +13,7 @@ namespace Jarvis
 {
 	std::array<std::string, 2> ResponseFactory::searchStrings = {"..", "%2e%2e"};
 	std::string ResponseFactory::serverAlias;
-	std::regex ResponseFactory::pattern("[^a-zA-Z0-9-_. ?=/]");
+	std::regex ResponseFactory::pattern("[^a-zA-Z0-9-_. ?=/&]");
 
 	std::string ResponseFactory::setServerAlias()
 	{

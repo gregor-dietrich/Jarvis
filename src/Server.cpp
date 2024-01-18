@@ -25,21 +25,20 @@ namespace Jarvis
 
 	void Server::run()
 	{
-		while (m_alive) {
-			try {
-				TcpSocket socket(*m_ioContext);
-				m_acceptor->accept(socket);
-				handleRequest(socket);
+		listen();
+		m_ioContext->run();
+	}
+
+	void Server::listen()
+	{
+		auto socket = std::make_shared<TcpSocket>(*m_ioContext);
+		m_acceptor->async_accept(*socket, [this, socket](const boost::system::error_code error) {
+			if (m_alive && !error) {
+				std::thread handlerThread(&Server::handleRequest, this, socket);
+				m_threads.emplace_back(std::move(handlerThread));
+				listen();
 			}
-			catch (const boost::system::system_error& e) {
-				if (m_alive) {
-					Logger::error("Server::run(): " + std::string(e.what()));
-				}
-			}
-			catch (const std::exception& e) {
-				Logger::error("Server::run(): " + std::string(e.what()));
-			}
-		}
+		});
 	}
 
 	void Server::quit()
@@ -48,20 +47,25 @@ namespace Jarvis
 		m_alive = false;
 		m_ioContext->stop();
 		m_acceptor->close();
+		for (auto& t : m_threads) {
+			if (t.joinable()) {
+				t.join();
+			}
+		}
 	}
 
-	void Server::handleRequest(TcpSocket& socket)
+	void Server::handleRequest(std::shared_ptr<TcpSocket> socket)
 	{
-		const auto connection = toString(socket);
+		const auto connection = toString(*socket);
 
 		try {
 			Logger::trace("Connection established with " + connection);
 
-			const auto request = readRequest(socket);
+			const auto request = readRequest(*socket);
 			if (request != nullptr) {
 				Logger::trace("Read request from " + connection);
 
-				const auto statusCode = writeResponse(socket, *request);
+				const auto statusCode = writeResponse(*socket, *request);
 				if (statusCode == -1) {
 					Logger::error("Failed to send response to " + connection);
 				} else {
@@ -69,7 +73,7 @@ namespace Jarvis
 				}
 			}
 
-			socket.shutdown(TcpSocket::shutdown_send);
+			socket->shutdown(TcpSocket::shutdown_send);
 			Logger::trace("Closed connection with " + connection);
 		} catch (const std::exception& e) {
 			Logger::error("Server::handleRequest @" + connection + ": " + std::string(e.what()));

@@ -58,5 +58,9 @@
     <None Include="cfg\fileRoutes.json">
       <Filter>cfg</Filter>
     </None>
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
 </Project>
