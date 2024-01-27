@@ -50,24 +50,21 @@ namespace Jarvis
 			}
 			std::vector<std::string> path;
 			boost::split(path, route, boost::is_any_of("/"));
-			if (path.empty()) {
+			
+			if (path.empty() || m_fileRoutes.count(path[0]) == 0) {
 				return false;
 			}
 
-			for (const auto& fileRoute : m_fileRoutes) {
-				if (fileRoute.first != path[0]) {
+			const auto& fileRoute = m_fileRoutes[path[0]];
+			for (const auto& fileExtension : fileRoute.second) {
+				const auto& fileName = path[path.size() - 1];
+				const auto offset = fileName.find(".");
+				if (offset == std::string::npos) {
 					continue;
 				}
-				for (const auto& fileExtension : fileRoute.second.second) {
-					const auto fileName = path[path.size() - 1];
-					const auto offset = fileName.find(".");
-					if (offset == std::string::npos) {
-						continue;
-					}
-					if (fileName.substr(offset + 1) == fileExtension.first) {
-						std::filesystem::path filePath = fileRoute.second.first + "/" + fileName;
-						return std::filesystem::exists(filePath);
-					}
+				if (fileName.substr(offset + 1) == fileExtension.first) {
+					std::filesystem::path filePath = fileRoute.first + "/" + fileName;
+					return std::filesystem::exists(filePath);
 				}
 			}
 		} catch (...) {
@@ -81,7 +78,7 @@ namespace Jarvis
 		std::vector<std::string> result;
 		boost::split(result, target, boost::is_any_of("/"));
 		const auto& fileName = result[result.size() - 1];
-		const auto& fileExtension = fileName.substr(fileName.find('.') + 1);
+		const auto fileExtension = fileName.substr(fileName.find('.') + 1);
 		return m_fileRoutes[result[0]].second[fileExtension];
 	}
 

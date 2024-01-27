@@ -53,7 +53,7 @@ namespace Jarvis
 
 	inline std::string toString(const TcpSocket& socket)
 	{
-		const tcp::endpoint endpoint = socket.remote_endpoint();
+		const tcp::endpoint& endpoint = socket.remote_endpoint();
 		return endpoint.address().to_string() + ":" + std::to_string(endpoint.port());
 	}
 }
