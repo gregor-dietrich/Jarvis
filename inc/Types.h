@@ -15,7 +15,8 @@ namespace Jarvis
 	using HttpRequest = http::request<http::string_body>;
 
 	namespace ip = boost::asio::ip;
-	using port_t = ip::port_type;
 	using tcp = ip::tcp;
 	using TcpSocket = tcp::socket;
+
+	using port_t = decltype(std::declval<tcp::endpoint>().port());
 }

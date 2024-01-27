@@ -92,7 +92,7 @@ namespace Jarvis
 
 	http::status ResponseFactory::createGETResponse(TcpSocket& socket, const HttpRequest& request)
 	{
-		std::string target = request.target().substr(1);
+		std::string target = std::string(request.target().substr(1));
 		sanitize(target);
 		Logger::trace("Received a GET Request for resource: " + target);
 
