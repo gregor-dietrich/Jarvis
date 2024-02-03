@@ -53,6 +53,9 @@
     <ClInclude Include="inc\Router.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="inc\Version.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cfg\fileRoutes.json">

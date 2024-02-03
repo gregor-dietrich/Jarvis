@@ -6,6 +6,7 @@
 #include "Logger.h"
 #include "Server.h"
 #include "Util.h"
+#include "Version.h"
 
 using namespace Jarvis;
 
@@ -55,6 +56,8 @@ static CLArgs parseArgs(int argc, char** argv)
 int main(int argc, char** argv)
 {
 	try {
+		Logger::print(getVersion());
+
 		const auto args = parseArgs(argc, argv);
 		Logger::init(args.logDir, args.logLevel);
 		

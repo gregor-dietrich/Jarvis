@@ -146,6 +146,7 @@
     <ClInclude Include="inc\ResponseFactory.h" />
     <ClInclude Include="inc\Util.h" />
     <ClInclude Include="inc\Router.h" />
+    <ClInclude Include="inc\Version.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cfg\fileRoutes.json" />
