@@ -1,4 +1,3 @@
-#include <array>
 #include <iostream>
 #include <string>
 
@@ -11,7 +10,7 @@
 
 namespace Jarvis
 {
-	Server::Server(const port_t port/* = 80 */) : m_port(port), m_alive(true), 
+	Server::Server(const port_t port/* = 80 */) : m_port(port), m_alive(true), m_threads(),
 		m_ioContext(std::make_shared<boost::asio::io_context>()), 
 		m_acceptor(std::make_unique<tcp::acceptor>(*m_ioContext, tcp::endpoint(tcp::v4(), m_port)))
 	{

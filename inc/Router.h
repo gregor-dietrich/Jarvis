@@ -1,7 +1,6 @@
 #pragma once
 
 #include <unordered_map>
-#include <unordered_set>
 #include <string>
 
 #include <boost/property_tree/ptree.hpp>
@@ -9,10 +8,10 @@
 
 #include "Logger.h"
 
-namespace pt = boost::property_tree;
-
 namespace Jarvis
 {
+	namespace pt = boost::property_tree;
+
 	class Router
 	{
 		static std::unordered_map<std::string, std::pair<std::string, std::unordered_map<std::string, std::string>>> m_fileRoutes;
