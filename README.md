@@ -1,5 +1,7 @@
 # Jarvis
 
+Learning project - not recommended for use in production environments under any circumstances, absolutely no warranty.
+
 ## Building
 
 Boost is required on all platforms.
