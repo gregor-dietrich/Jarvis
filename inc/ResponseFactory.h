@@ -11,9 +11,7 @@ namespace Jarvis
 {
 	class ResponseFactory
 	{
-		static std::array<std::string, 2> searchStrings;
 		static std::string serverAlias;
-		static std::regex pattern;
 
 		static void sanitize(std::string& data);
 

@@ -11,13 +11,11 @@
 
 namespace Jarvis
 {
-	std::array<std::string, 2> ResponseFactory::searchStrings = {"..", "%2e%2e"};
 	std::string ResponseFactory::serverAlias;
-	std::regex ResponseFactory::pattern("[^a-zA-Z0-9-_. ?=/&]");
 
 	std::string ResponseFactory::setServerAlias()
 	{
-		const std::array<std::string, 10> fakeOSs = {
+		static const std::array<std::string, 10> fakeOSs = {
 			" (Alpine)",
 			" (Arch Linux)",
 			" (CentOS)",
@@ -30,7 +28,7 @@ namespace Jarvis
 			" (Win64)"
 		};
 
-		const std::array<std::string, 15>fakeServers = {
+		static const std::array<std::string, 15> fakeServers = {
 			"Apache/2.4.41",
 			"Apache/2.4.46",
 			"Apache/2.4.52",
@@ -82,11 +80,14 @@ namespace Jarvis
 
 	void ResponseFactory::sanitize(std::string& data)
 	{
+		static const std::array<std::string, 2> searchStrings = { "..", "%2e%2e" };
 		for (const auto& searchString : searchStrings) {
 			replaceSubString(data, searchString, "");
 		}
+
 		replaceSubString(data, "%20", " ");
 
+		static const std::regex pattern("[^a-zA-Z0-9-_. ?=/&]");
 		data = std::regex_replace(data, pattern, "");
 	}
 
