@@ -1,6 +1,10 @@
 #include <iostream>
 #include <string>
 
+#ifdef _DEBUG
+	#include <chrono>
+#endif
+
 #include "Logger.h"
 #include "ResponseFactory.h"
 #include "Router.h"
@@ -55,6 +59,10 @@ namespace Jarvis
 
 	void Server::handleRequest(std::shared_ptr<TcpSocket> socket)
 	{
+	#ifdef _DEBUG
+		const auto start = std::chrono::high_resolution_clock::now();
+	#endif
+
 		const auto connection = toString(*socket);
 
 		try {
@@ -77,6 +85,12 @@ namespace Jarvis
 		} catch (const std::exception& e) {
 			Logger::error("Server::handleRequest @" + connection + ": " + std::string(e.what()));
 		}
+
+	#ifdef _DEBUG
+		const auto stop = std::chrono::high_resolution_clock::now();
+		const auto duration = std::to_string(duration_cast<std::chrono::microseconds>(stop - start).count());
+		Logger::trace("Handled request from " + connection + " in " + duration + " microseconds.");
+	#endif
 	}
 
 	std::unique_ptr<HttpRequest> Server::readRequest(TcpSocket& socket)
