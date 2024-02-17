@@ -102,7 +102,7 @@ namespace Jarvis
 			return request;
 		} catch (const boost::system::system_error& e) {
 			if (e.code() == http::error::end_of_stream) {
-				Logger::info("end of stream");
+				Logger::debug("end of stream");
 				return nullptr;
 			}
 			Logger::error("Server::readRequest(): " + std::string(e.what()));

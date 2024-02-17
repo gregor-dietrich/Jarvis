@@ -13,9 +13,10 @@ namespace Jarvis
 		WARNINGMSG,
 		INFOMSG,
 		TRACEMSG,
+		DEBUGMSG,
 
 		MINLEVEL = 0,
-		MAXLEVEL = 3
+		MAXLEVEL = 4
 	};
 
 	class Logger
@@ -30,11 +31,13 @@ namespace Jarvis
 			light_green = 10,
 			light_yellow = 14,
 			light_blue = 9,
+			white = 15,
 #else
-			red,
-			green,
-			yellow,
-			blue,
+			red = 0,
+			green = 1,
+			yellow = 2,
+			blue = 3,
+			white = 6,
 			light_red = red,
 			light_green = green,
 			light_yellow = yellow,
@@ -65,6 +68,7 @@ namespace Jarvis
 	public:
 		static bool init(const std::string& path, const LogLevel level);
 
+		static void debug(const std::string& message);
 		static void trace(const std::string& message);
 		static void info(const std::string& message);
 		static void warning(const std::string& message, const bool colored = true);

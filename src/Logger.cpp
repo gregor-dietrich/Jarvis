@@ -61,6 +61,9 @@ namespace Jarvis
 
 		result << "[" << getTime() << "] (";
 		switch (messageType) {
+		case LogLevel::DEBUGMSG:
+			result << "DEBUG";
+			break;
 		case LogLevel::TRACEMSG:
 			result << "TRACE";
 			break;
@@ -101,6 +104,7 @@ namespace Jarvis
 	void Logger::print(const LogLevel messageType, const std::string& message)
 	{
 		switch (messageType) {
+		case LogLevel::DEBUGMSG:
 		case LogLevel::TRACEMSG:
 		case LogLevel::INFOMSG:
 			std::cout << message;
@@ -152,7 +156,21 @@ namespace Jarvis
 		std::cout << format(message);
 	}
 
-	void Logger::trace(const std::string& message)
+    void Logger::debug(const std::string& message)
+    {
+		if (logLevel < LogLevel::DEBUGMSG) {
+			return;
+		}
+		const auto formatted = format(LogLevel::DEBUGMSG, message);
+
+		setColor(false, color::white);
+		print(LogLevel::DEBUGMSG, formatted);
+		setColor(false);
+
+		log(formatted);
+    }
+
+    void Logger::trace(const std::string& message)
 	{
 		if (logLevel < LogLevel::TRACEMSG) {
 			return;
