@@ -8,10 +8,10 @@ Learning project - not recommended for use in production environments under any 
 
 The following libraries are required to build the project (all platforms):
 
-- [Boost](https://www.boost.org)
+- [Boost](https://www.boost.org) tested versions:
   - Windows (Win10 x64): 1.84.0
   - Linux (Debian12 x64): 1.74.0
-- [OpenSSL](https://www.openssl.org)
+- [OpenSSL](https://www.openssl.org) tested versions:
   - Windows (Win10 x64): 3.2.1
   - Linux (Debian12 x64): 3.0.11
 
