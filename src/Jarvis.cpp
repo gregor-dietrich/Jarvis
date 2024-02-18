@@ -56,15 +56,6 @@ static CLArgs parseArgs(int argc, char** argv)
 
 int main(int argc, char** argv)
 {
-	DB db;
-	auto result = db.query("SELECT * FROM users");
-	for (const auto& row : result.rows()) {
-		for (const auto& col : row) {
-			std::cout << col << '\t';
-		}
-		std::cout << '\n';
-	}
-
 	try {
 		Logger::print(VERSION());
 
