@@ -34,7 +34,7 @@ namespace Jarvis
 
 	void Server::listen()
 	{
-		auto socket = std::make_shared<TcpSocket>(*m_ioContext);
+		auto socket = std::make_shared<tcp::socket>(*m_ioContext);
 		m_acceptor->async_accept(*socket, [this, socket](const boost::system::error_code error) {
 			if (m_alive && !error) {
 				std::thread handlerThread(&Server::handleRequest, this, socket);
@@ -57,7 +57,7 @@ namespace Jarvis
 		}
 	}
 
-	void Server::handleRequest(std::shared_ptr<TcpSocket> socket)
+	void Server::handleRequest(std::shared_ptr<tcp::socket> socket)
 	{
 	#ifdef _DEBUG
 		const auto start = std::chrono::high_resolution_clock::now();
@@ -80,7 +80,7 @@ namespace Jarvis
 				}
 			}
 
-			socket->shutdown(TcpSocket::shutdown_send);
+			socket->shutdown(tcp::socket::shutdown_send);
 			Logger::trace("Closed connection with " + connection);
 		} catch (const std::exception& e) {
 			Logger::error("Server::handleRequest @" + connection + ": " + std::string(e.what()));
@@ -93,7 +93,7 @@ namespace Jarvis
 	#endif
 	}
 
-	std::unique_ptr<HttpRequest> Server::readRequest(TcpSocket& socket)
+	std::unique_ptr<HttpRequest> Server::readRequest(tcp::socket& socket)
 	{
 		try {
 			boost::beast::flat_buffer buffer;
@@ -112,7 +112,7 @@ namespace Jarvis
 		return nullptr;
 	}
 
-	int16_t Server::writeResponse(TcpSocket& socket, const HttpRequest& request)
+	int16_t Server::writeResponse(tcp::socket& socket, const HttpRequest& request)
 	{
 		try {
 			const auto statusCode = ResponseFactory::createResponse(socket, request);

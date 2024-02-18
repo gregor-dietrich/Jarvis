@@ -18,9 +18,9 @@ namespace Jarvis
 		std::unique_ptr<tcp::acceptor> m_acceptor;
 
 		void listen();
-		void handleRequest(std::shared_ptr<TcpSocket> socket);
-		std::unique_ptr<HttpRequest> readRequest(TcpSocket& socket);
-		int16_t writeResponse(TcpSocket& socket, const HttpRequest& request);
+		void handleRequest(std::shared_ptr<tcp::socket> socket);
+		std::unique_ptr<HttpRequest> readRequest(tcp::socket& socket);
+		int16_t writeResponse(tcp::socket& socket, const HttpRequest& request);
 	public:
 		Server(const port_t port = 80);
 

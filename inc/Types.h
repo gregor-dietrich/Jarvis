@@ -17,7 +17,6 @@ namespace Jarvis
 
 	namespace ip = boost::asio::ip;
 	using ip::tcp;
-	using TcpSocket = tcp::socket;
 	using port_t = decltype(std::declval<tcp::endpoint>().port());
 
 	namespace mysql = boost::mysql;	

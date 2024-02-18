@@ -55,7 +55,7 @@ namespace Jarvis
 		return serverAlias;
 	}
 
-	http::status ResponseFactory::createResponse(TcpSocket& socket, const HttpRequest& request)
+	http::status ResponseFactory::createResponse(tcp::socket& socket, const HttpRequest& request)
 	{
 		HttpStringResponse response;
 
@@ -91,7 +91,7 @@ namespace Jarvis
 		data = std::regex_replace(data, pattern, "");
 	}
 
-	http::status ResponseFactory::createGETResponse(TcpSocket& socket, const HttpRequest& request)
+	http::status ResponseFactory::createGETResponse(tcp::socket& socket, const HttpRequest& request)
 	{
 		std::string target = std::string(request.target().substr(1));
 		sanitize(target);
