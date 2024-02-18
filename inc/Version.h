@@ -4,18 +4,15 @@
 
 namespace Jarvis
 {
+	constexpr auto _VERSION = "0.1.0";
+
 	namespace
 	{
-		constexpr auto _VERSION = "0.1.0";
 		constexpr auto _REVISION = "SNAPSHOT";
 	}
 
-	const std::string VERSION(const bool full = true)
+	const std::string VERSION()
 	{
-		if (!full) {
-			return _VERSION;
-		}
-
 		static std::string value;
 
 		if (value.empty()) {
