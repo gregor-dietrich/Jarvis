@@ -6,28 +6,27 @@ namespace Jarvis
 {
 	namespace
 	{
-		constexpr auto _PROJECT = "Jarvis";
 		constexpr auto _VERSION = "0.1.0";
-		constexpr auto _REVISION = "Development Build";
-
-#ifdef _DEBUG
-		constexpr auto _BUILDCFG = "DEBUG";
-#else
-		constexpr auto _BUILDCFG = "RELEASE";
-#endif
+		constexpr auto _REVISION = "SNAPSHOT";
 	}
 
-	constexpr const std::string VERSION()
+	const std::string VERSION(const bool full = true)
 	{
-		std::string value = _PROJECT;
+		if (!full) {
+			return _VERSION;
+		}
 
-		value.append(" v");
-		value.append(_VERSION);
-		value.append("-");
-		value.append(_BUILDCFG);
-		value.append(" (");
-		value.append(_REVISION);
-		value.append(")");
+		static std::string value;
+
+		if (value.empty()) {
+			value.append("Jarvis v");
+			value.append(_VERSION);
+			value.append("-");
+			value.append(_REVISION);
+#ifdef _DEBUG
+			value.append(" (DEBUG BUILD)");
+#endif
+		}
 
 		return value;
 	}

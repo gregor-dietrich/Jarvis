@@ -8,8 +8,12 @@ Learning project - not recommended for use in production environments under any 
 
 The following libraries are required to build the project (all platforms):
 
-- [Boost](https://www.boost.org) (recommended: latest stable version - tested: [1.84.0](https://www.boost.org/users/history/version_1_84_0.html))
-- [OpenSSL](https://www.openssl.org) (recommended: latest stable version - tested: [3.2.1](https://slproweb.com/products/Win32OpenSSL.html))
+- [Boost](https://www.boost.org)
+  - Windows (Win10 x64): 1.84.0
+  - Linux (Debian12 x64): 1.74.0
+- [OpenSSL](https://www.openssl.org)
+  - Windows (Win10 x64): 3.2.1
+  - Linux (Debian12 x64): 3.0.11
 
 ### Runtime
 
@@ -26,7 +30,7 @@ This means they must either reside in the same directory as the executable or be
 ### Windows
 
 - Visual Studio 2022
-- Toolset v143,  C++ 20
+- Toolset v143, C++20
 - Set "-logLevel 4" in Debugging arguments
 - Adjust dependency paths (see "C/C++ -> General" and "Linker -> General")
 

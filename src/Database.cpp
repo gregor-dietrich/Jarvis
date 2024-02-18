@@ -4,6 +4,8 @@
 
 namespace Jarvis
 {
+	namespace mysql = boost::mysql;
+
 	Database::Database()
 	{
 		
