@@ -14,7 +14,7 @@ namespace Jarvis
 		port_t m_port;
 		bool m_alive;
 		std::vector<std::thread> m_threads;
-		std::shared_ptr<boost::asio::io_context> m_ioContext;
+		std::shared_ptr<asio::io_context> m_ioContext;
 		std::unique_ptr<tcp::acceptor> m_acceptor;
 
 		void listen();

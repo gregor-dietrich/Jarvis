@@ -33,7 +33,7 @@
     <ClCompile Include="src\Router.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\Database.cpp">
+    <ClCompile Include="src\DB.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,7 +59,7 @@
     <ClInclude Include="inc\Version.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Database.h">
+    <ClInclude Include="inc\DB.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

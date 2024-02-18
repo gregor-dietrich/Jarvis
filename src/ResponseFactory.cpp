@@ -100,7 +100,7 @@ namespace Jarvis
 		if (Router::fileRouteExists(target)) {
 			try {
 				auto fileResponse = buildFileResponse(target, request.version());
-				boost::beast::error_code ec;
+				beast::error_code ec;
 				http::serializer<false, http::file_body, http::fields> sr{ fileResponse };
 				http::write(socket, sr, ec);
 				if (ec) {
@@ -146,8 +146,8 @@ namespace Jarvis
 		response.set(http::field::content_type, Router::getMimeType(target));
 		response.result(http::status::ok);
 
-		boost::beast::error_code ec;
-		response.body().open(Router::getLocalPath(target).c_str(), boost::beast::file_mode::scan, ec);
+		beast::error_code ec;
+		response.body().open(Router::getLocalPath(target).c_str(), beast::file_mode::scan, ec);
 
 		if (ec) {
 			Logger::error("buildFileResponse(): " + ec.message());

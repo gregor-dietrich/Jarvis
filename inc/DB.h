@@ -1,13 +1,16 @@
 #pragma once
 
+#include <memory>
+
 #include "Logger.h"
 #include "Types.h"
 
 namespace Jarvis
 {
-	class Database
+	class DB
 	{
 	public:
-		Database();
+		DB();
+		mysql::results query(const std::string& query);
 	};
 }
