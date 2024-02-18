@@ -4,20 +4,31 @@
 
 namespace Jarvis
 {
-	constexpr auto VERSION = "0.1.0";
-	constexpr auto REVISION = "Development Build";
-
-	std::string getVersion()
+	namespace
 	{
-		static std::string retval = "Jarvis v";
+		constexpr auto _PROJECT = "Jarvis";
+		constexpr auto _VERSION = "0.1.0";
+		constexpr auto _REVISION = "Development Build";
 
-		if (retval.length() <= 8) {
-			retval += VERSION;
-			retval += " (";
-			retval += REVISION;
-			retval += ")";
-		}
+#ifdef _DEBUG
+		constexpr auto _BUILDCFG = "DEBUG";
+#else
+		constexpr auto _BUILDCFG = "RELEASE";
+#endif
+	}
 
-		return retval;
+	constexpr const std::string VERSION()
+	{
+		std::string value = _PROJECT;
+
+		value.append(" v");
+		value.append(_VERSION);
+		value.append("-");
+		value.append(_BUILDCFG);
+		value.append(" (");
+		value.append(_REVISION);
+		value.append(")");
+
+		return value;
 	}
 }

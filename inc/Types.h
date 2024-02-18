@@ -6,6 +6,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/beast.hpp>
+#include <boost/mysql.hpp>
 
 namespace Jarvis
 {
@@ -15,8 +16,9 @@ namespace Jarvis
 	using HttpRequest = http::request<http::string_body>;
 
 	namespace ip = boost::asio::ip;
-	using tcp = ip::tcp;
+	using ip::tcp;
 	using TcpSocket = tcp::socket;
-
 	using port_t = decltype(std::declval<tcp::endpoint>().port());
+
+	namespace mysql = boost::mysql;	
 }

@@ -56,7 +56,7 @@ static CLArgs parseArgs(int argc, char** argv)
 int main(int argc, char** argv)
 {
 	try {
-		Logger::print(getVersion());
+		Logger::print(VERSION());
 
 		const auto args = parseArgs(argc, argv);
 		Logger::init(args.logDir, args.logLevel);
