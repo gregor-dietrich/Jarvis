@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 target_compile_features(Jarvis PRIVATE cxx_std_20)
 
 set(SOURCES
-	boost_mysql.cpp
+    boost_mysql.cpp
     src/Logger.cpp
     src/ResponseFactory.cpp
     src/Router.cpp
