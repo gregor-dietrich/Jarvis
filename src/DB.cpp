@@ -11,39 +11,49 @@ namespace Jarvis
 	{
 	}
 
-	mysql::results DB::query(const std::string& query) const
+	std::unique_ptr<mysql::tcp_ssl_connection> DB::connect() const
+	{
+		// Handshake Params
+		mysql::handshake_params dbParams(m_username, m_password, m_database);
+
+		// TO DO: Use SSL!
+		// Disable SSL
+		dbParams.set_ssl(mysql::ssl_mode::disable);
+
+		// The execution context, required to run I/O operations.
+		asio::io_context ctx;
+
+		// The SSL context, required to establish TLS connections.
+		// The default SSL options are good enough for us at this point.
+		ssl::context ssl_ctx(ssl::context::tls_client);
+
+		// Represents a connection to the MySQL server.
+		auto conn = std::make_unique<mysql::tcp_ssl_connection>(ctx.get_executor(), ssl_ctx);
+
+		// Resolve the hostname to get a collection of endpoints
+		tcp::resolver resolver(ctx.get_executor());
+		auto endpoints = resolver.resolve(m_hostname, m_port);
+
+		// Connect to the server using the first endpoint returned by the resolver
+		conn->connect(*endpoints.begin(), dbParams);
+
+		return conn;
+	}
+
+	mysql::results DB::query(const std::string& query, const std::vector<mysql::field>& params) const
 	{
 		mysql::results result;
 		try {
-			// Handshake Params
-			mysql::handshake_params params(m_username, m_password, m_database);
+			auto conn = connect();
 
-			// TO DO: Use SSL!
-			// Disable SSL
-			params.set_ssl(mysql::ssl_mode::disable);
-
-			// The execution context, required to run I/O operations.
-			asio::io_context ctx;
-
-			// The SSL context, required to establish TLS connections.
-			// The default SSL options are good enough for us at this point.
-			ssl::context ssl_ctx(ssl::context::tls_client);
-
-			// Represents a connection to the MySQL server.
-			mysql::tcp_ssl_connection m_connection(ctx.get_executor(), ssl_ctx);
-
-			// Resolve the hostname to get a collection of endpoints
-			tcp::resolver resolver(ctx.get_executor());
-			auto endpoints = resolver.resolve(m_hostname, m_port);
-
-			// Connect to the server using the first endpoint returned by the resolver
-			m_connection.connect(*endpoints.begin(), params);
+			 // Prepare the statement
+        	mysql::statement stmt = conn->prepare_statement(query);
 
 			// Issue the SQL query to the server
-			m_connection.execute(query, result);
+			conn->execute(stmt.bind(params.begin(), params.end()), result);
 
 			// Close the connection
-			m_connection.close();
+			conn->close();
 		}
 		catch (const std::exception& err) {
 			Logger::error(err.what());
