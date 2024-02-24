@@ -42,18 +42,18 @@ mkdir ~/workspace && cd ~/workspace
 git clone https://github.com/gregor-dietrich/Jarvis && cd Jarvis && mkdir build
 ```
 
-#### Building
-
-```
-cd build && cmake .. && make && cd ..
-```
-
-- g++-12 seems to have some issues with Boost, so I used g++-11 instead.
+- g++-12 seems to have some issues with Boost, so I used g++-11 instead:
 
 ```
 sudo apt install g++-11
 sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 60
 g++ --version
+```
+
+#### Building
+
+```
+cd build && cmake .. && make && cd ..
 ```
 
 #### Running
