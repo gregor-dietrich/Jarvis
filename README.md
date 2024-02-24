@@ -34,9 +34,20 @@ This means they must either reside in the same directory as the executable or be
 - Use CMake (oldest version tested: 3.22.1)
 - gcc-12 seemed to have some issues for me, use gcc-11 instead (tested with gcc-11.2.0 and gcc-11.3.0)
 
+#### Preparing
+
 ```
 apt install gcc cmake openssl libssl-dev
-mount -t vboxsf -o uid=1000,gid=1000 Jarvis ~/workspace/Jarvis 
+```
+
+#### Building
+
+```
 cd ~/workspace/Jarvis && mkdir build && cd build && cmake .. && make && cd ..
+```
+
+#### Running
+
+```
 mv build/Jarvis ./Jarvis && ./Jarvis -logLevel 4 -port 8080 && mv ./Jarvis build/Jarvis
 ```
