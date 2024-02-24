@@ -37,13 +37,17 @@ This means they must either reside in the same directory as the executable or be
 #### Preparing
 
 ```
-apt install gcc cmake openssl libssl-dev
+sudo apt update && sudo apt install cmake gcc git libssl-dev make openssl tar wget
+wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.bz2
+tar --bzip2 -xf boost_1_84_0.tar.bz2 && rm boost_1_84_0.tar.bz2 && sudo mv boost_1_84_0 /usr/local/boost_1_84_0
+mkdir ~/workspace && cd ~/workspace
+git clone https://github.com/gregor-dietrich/Jarvis && cd Jarvis && mkdir build
 ```
 
 #### Building
 
 ```
-cd ~/workspace/Jarvis && mkdir build && cd build && cmake .. && make && cd ..
+cd build && cmake .. && make && cd ..
 ```
 
 #### Running
