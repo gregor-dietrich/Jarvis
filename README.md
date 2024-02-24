@@ -31,13 +31,10 @@ This means they must either reside in the same directory as the executable or be
 
 ### Unix
 
-- Use CMake (oldest version tested: 3.22.1)
-- gcc-12 seemed to have some issues for me, use gcc-11 instead (tested with gcc-11.2.0 and gcc-11.3.0)
-
 #### Preparing
 
 ```
-sudo apt update && sudo apt install cmake gcc git libssl-dev make openssl tar wget
+sudo apt update && sudo apt install build-essential cmake git libssl-dev openssl tar wget
 wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.bz2
 tar --bzip2 -xf boost_1_84_0.tar.bz2 && rm boost_1_84_0.tar.bz2
 sudo mv boost_1_84_0 /usr/local/boost_1_84_0
@@ -49,6 +46,14 @@ git clone https://github.com/gregor-dietrich/Jarvis && cd Jarvis && mkdir build
 
 ```
 cd build && cmake .. && make && cd ..
+```
+
+- g++-12 seems to have some issues with Boost, so I used g++-11 instead.
+
+```
+sudo apt install g++-11
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 60
+g++ --version
 ```
 
 #### Running
