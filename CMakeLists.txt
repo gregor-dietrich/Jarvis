@@ -7,11 +7,12 @@ set(BOOST_MIN_VERSION 1.82.0)
 set(OPENSSL_MIN_VERSION 3.0.11)
 
 set(SOURCES
+    src/DB.cpp
+    src/Jarvis.cpp
     src/Logger.cpp
     src/ResponseFactory.cpp
     src/Router.cpp
     src/Server.cpp
-    src/Jarvis.cpp
 )
 
 # Boost Package
