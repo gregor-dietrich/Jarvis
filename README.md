@@ -8,8 +8,8 @@ Learning project - not recommended for use in production environments under any 
 
 The following libraries are required to build the project (all platforms):
 
-- [Boost](https://www.boost.org) 1.83.0
-- [OpenSSL](https://www.openssl.org) 3.0.2
+- [Boost](https://www.boost.org) (min. 1.83.0)
+- [OpenSSL](https://www.openssl.org) (min. 3.0.2)
 
 ### Runtime
 
