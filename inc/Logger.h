@@ -27,28 +27,23 @@ namespace Jarvis
 			green = 2,
 			yellow = 6,
 			blue = 1,
+			light_gray = 7,
 			light_red = 12,
 			light_green = 10,
 			light_yellow = 14,
 			light_blue = 9,
-			white = 15,
 #else
-			red = 0,
-			green = 1,
-			yellow = 2,
-			blue = 3,
-			white = 6,
-			light_red = red,
-			light_green = green,
-			light_yellow = yellow,
-			light_blue = blue,
+			red = 31,
+			green = 32,
+			yellow = 33,
+			blue = 34,
+			light_gray = 0,
+			light_red = 91,
+			light_green = 92,
+			light_yellow = 93,
+			light_blue = 94,
 #endif
-			DEFAULT_COLOR =
-#ifdef _WIN32
-			7 // light_gray
-#else
-			6 // white
-#endif
+			DEFAULT_COLOR = light_gray
 		};
 
 		static LogLevel logLevel;

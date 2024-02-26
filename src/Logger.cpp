@@ -163,7 +163,7 @@ namespace Jarvis
 		}
 		const auto formatted = format(LogLevel::DEBUGMSG, message);
 
-		setColor(false, color::white);
+		setColor(false, color::DEFAULT_COLOR);
 		print(LogLevel::DEBUGMSG, formatted);
 		setColor(false);
 
