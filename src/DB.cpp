@@ -1,7 +1,9 @@
-#include "DB.h"
-
 #include <boost/mysql/src.hpp>
 #include <sstream>
+
+#include "DB.h"
+#include "Logger.h"
+#include "aliases.h"
 
 namespace Jarvis
 {

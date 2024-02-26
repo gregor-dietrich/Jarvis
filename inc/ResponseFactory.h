@@ -5,10 +5,13 @@
 #include <string>
 #include <unordered_map>
 
-#include "Types.h"
+#include "aliases.h"
 
 namespace Jarvis
 {
+	using HttpStringResponse = http::response<http::string_body>;
+	using HttpFileResponse = http::response<http::file_body>;
+
 	class ResponseFactory
 	{
 		static std::string serverAlias;

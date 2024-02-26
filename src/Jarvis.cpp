@@ -6,8 +6,8 @@
 #include "DB.h"
 #include "Logger.h"
 #include "Server.h"
-#include "Util.h"
-#include "Version.h"
+#include "util.h"
+#include "version.h"
 
 using namespace Jarvis;
 

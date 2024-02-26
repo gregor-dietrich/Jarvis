@@ -4,11 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "Logger.h"
-#include "Types.h"
+#include <boost/mysql.hpp>
 
 namespace Jarvis
 {
+	namespace mysql = boost::mysql;
+	
 	class DB
 	{
 		std::string m_username;

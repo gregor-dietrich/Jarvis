@@ -3,8 +3,8 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include "Util.h"
-
+#include "Logger.h"
+#include "util.h"
 #include "Router.h"
 
 namespace Jarvis

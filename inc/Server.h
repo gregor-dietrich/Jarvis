@@ -5,10 +5,12 @@
 #include <thread>
 #include <vector>
 
-#include "Types.h"
+#include "aliases.h"
 
 namespace Jarvis
 {
+	using port_t = decltype(std::declval<tcp::endpoint>().port());
+
 	class Server
 	{
 		port_t m_port;

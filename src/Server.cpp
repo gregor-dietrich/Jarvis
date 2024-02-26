@@ -8,7 +8,7 @@
 #include "Logger.h"
 #include "ResponseFactory.h"
 #include "Router.h"
-#include "Util.h"
+#include "util.h"
 
 #include "Server.h"
 
