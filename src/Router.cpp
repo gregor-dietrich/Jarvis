@@ -58,10 +58,20 @@ namespace Jarvis
 			const auto& fileRoute = m_fileRoutes[path[0]];
 			for (const auto& fileExtension : fileRoute.second) {
 				const auto& fileName = path[path.size() - 1];
-				const auto offset = fileName.find(".");
+				
+				auto offset = std::string::npos;
+				for (int64_t i = fileName.length() - 1; i >= 0; --i) {
+					if (fileName[i] != '.') {
+						continue;
+					}
+					offset = i;
+					break;
+				}
+
 				if (offset == std::string::npos) {
 					continue;
 				}
+				
 				if (fileName.substr(offset + 1) == fileExtension.first) {
 					std::filesystem::path filePath = fileRoute.first + "/" + fileName;
 					return std::filesystem::exists(filePath);
