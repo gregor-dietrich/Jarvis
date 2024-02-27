@@ -13,7 +13,7 @@ using namespace Jarvis;
 
 struct CLArgs
 {
-	std::string logDir;
+	String logDir;
 	port_t port = 80;
 	LogLevel logLevel = LogLevel::MINLEVEL;
 };
@@ -26,7 +26,7 @@ static CLArgs parseArgs(int argc, char** argv)
 		if (i + 1 >= argc) {
 			continue;
 		}
-		const std::string arg = argv[i];
+		const String arg = argv[i];
 
 		if (arg == "-logDir") {
 			result.logDir = argv[++i];
@@ -46,7 +46,7 @@ static CLArgs parseArgs(int argc, char** argv)
 			}
 		}
 		catch (const std::exception& e) {
-			Logger::warning("Exception in parseArgs(): " + std::string(e.what()));
+			Logger::warning("Exception in parseArgs(): " + String(e.what()));
 			continue;
 		}
 	}
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
 		std::thread serverThread(&Server::run, &server);
 
 		while (true) {
-			std::string input;
+			String input;
 			std::getline(std::cin, input);
 			if (input == "quit") {
 				server.quit();
@@ -77,7 +77,7 @@ int main(int argc, char** argv)
 		}
 	}
 	catch (const std::exception& e) {
-		Logger::error("Exception in main(): " + std::string(e.what()));
+		Logger::error("Exception in main(): " + String(e.what()));
 		return 1;
 	}
 	catch (...) {

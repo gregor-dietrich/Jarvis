@@ -1,8 +1,6 @@
 #pragma once
 
-#include <cstdint>
 #include <memory>
-#include <thread>
 #include <vector>
 
 #include "aliases.h"
@@ -22,7 +20,7 @@ namespace Jarvis
 		void listen();
 		void handleRequest(std::shared_ptr<tcp::socket> socket);
 		std::unique_ptr<HttpRequest> readRequest(tcp::socket& socket);
-		int16_t writeResponse(tcp::socket& socket, const HttpRequest& request);
+		i16 writeResponse(tcp::socket& socket, const HttpRequest& request);
 	public:
 		Server(const port_t port = 80);
 

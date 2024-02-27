@@ -1,10 +1,11 @@
 #pragma once
 
 #include <memory>
-#include <string>
 #include <vector>
 
 #include <boost/mysql.hpp>
+
+#include "aliases.h"
 
 namespace Jarvis
 {
@@ -12,16 +13,16 @@ namespace Jarvis
 	
 	class DB
 	{
-		std::string m_username;
-		std::string m_password;
-		std::string m_database;
-		std::string m_hostname;
-		std::string m_port;
+		String m_username;
+		String m_password;
+		String m_database;
+		String m_hostname;
+		String m_port;
 
 		std::unique_ptr<mysql::tcp_ssl_connection> connect() const;
 	public:
-		DB(const std::string& username, const std::string& password, const std::string& database, const std::string& hostname, const std::string& port = mysql::default_port_string);
-		mysql::results query(const std::string& query, const std::vector<mysql::field>& params) const;
-		static std::string to_string(mysql::results result);
+		DB(const String& username, const String& password, const String& database, const String& hostname, const String& port = mysql::default_port_string);
+		mysql::results query(const String& query, const std::vector<mysql::field>& params) const;
+		static String to_string(mysql::results result);
 	};
 }

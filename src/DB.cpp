@@ -7,8 +7,8 @@
 
 namespace Jarvis
 {
-	DB::DB(const std::string& username, const std::string& password, const std::string& database, 
-		const std::string& hostname, const std::string& port /*= mysql::default_port_string*/)
+	DB::DB(const String& username, const String& password, const String& database, 
+		const String& hostname, const String& port /*= mysql::default_port_string*/)
 		: m_username(username), m_password(password), m_database(database), m_hostname(hostname), m_port(port)
 	{
 	}
@@ -42,7 +42,7 @@ namespace Jarvis
 		return conn;
 	}
 
-	mysql::results DB::query(const std::string& query, const std::vector<mysql::field>& params) const
+	mysql::results DB::query(const String& query, const std::vector<mysql::field>& params) const
 	{
 		mysql::results result;
 		try {
@@ -63,7 +63,7 @@ namespace Jarvis
 		return result;
 	}
 
-	std::string DB::to_string(mysql::results result)
+	String DB::to_string(mysql::results result)
 	{
 		std::stringstream ss;
 		if (result.has_value()) {

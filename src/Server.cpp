@@ -37,7 +37,7 @@ namespace Jarvis
 		auto socket = std::make_shared<tcp::socket>(*m_ioContext);
 		m_acceptor->async_accept(*socket, [this, socket](const boost::system::error_code error) {
 			if (m_alive && !error) {
-				std::thread handlerThread(&Server::handleRequest, this, socket);
+				Thread handlerThread(&Server::handleRequest, this, socket);
 				m_threads.emplace_back(std::move(handlerThread));
 				listen();
 			}
@@ -83,7 +83,7 @@ namespace Jarvis
 			socket->shutdown(tcp::socket::shutdown_send);
 			Logger::trace("Closed connection with " + connection);
 		} catch (const std::exception& e) {
-			Logger::error("Server::handleRequest @" + connection + ": " + std::string(e.what()));
+			Logger::error("Server::handleRequest @" + connection + ": " + String(e.what()));
 		}
 
 	#ifdef _DEBUG
@@ -105,20 +105,20 @@ namespace Jarvis
 				Logger::debug("end of stream");
 				return nullptr;
 			}
-			Logger::error("Server::readRequest(): " + std::string(e.what()));
+			Logger::error("Server::readRequest(): " + String(e.what()));
 		} catch (const std::exception& e) {
-			Logger::error("Server::readRequest(): " + std::string(e.what()));
+			Logger::error("Server::readRequest(): " + String(e.what()));
 		}
 		return nullptr;
 	}
 
-	int16_t Server::writeResponse(tcp::socket& socket, const HttpRequest& request)
+	i16 Server::writeResponse(tcp::socket& socket, const HttpRequest& request)
 	{
 		try {
 			const auto statusCode = ResponseFactory::createResponse(socket, request);
-			return static_cast<int16_t>(statusCode);
+			return static_cast<i16>(statusCode);
 		} catch (const std::exception& e) {
-			Logger::error("Server::writeResponse(): " + std::string(e.what()));
+			Logger::error("Server::writeResponse(): " + String(e.what()));
 			return -1;
 		}
 	}

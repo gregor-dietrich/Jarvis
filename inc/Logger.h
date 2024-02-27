@@ -1,14 +1,14 @@
 #pragma once
 
-#include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <memory>
-#include <string>
+
+#include "aliases.h"
 
 namespace Jarvis
 {
-	enum class LogLevel : uint16_t {
+	enum class LogLevel : u16 {
 		ERRORMSG,
 		WARNINGMSG,
 		INFOMSG,
@@ -21,7 +21,7 @@ namespace Jarvis
 
 	class Logger
 	{
-		enum class color : uint16_t {
+		enum class color : u16 {
 #ifdef _WIN32
 			red = 4,
 			green = 2,
@@ -47,27 +47,27 @@ namespace Jarvis
 		};
 
 		static LogLevel logLevel;
-		static std::string logFilePath;
+		static String logFilePath;
 		static bool initialized;
 
 		Logger() = default;
 
-		static void createDirectory(const std::string& path);
-		static std::string getTime();
-		static std::string format(const std::string& message);
-		static std::string format(const LogLevel messageType, const std::string& message);
+		static void createDirectory(const String& path);
+		static String getTime();
+		static String format(const String& message);
+		static String format(const LogLevel messageType, const String& message);
 		static void setColor(const bool isError, const color c = color::DEFAULT_COLOR);
 
-		static void print(const LogLevel messageType, const std::string& message);
-		static void log(const std::string& message);
+		static void print(const LogLevel messageType, const String& message);
+		static void log(const String& message);
 	public:
-		static bool init(const std::string& path, const LogLevel level);
+		static bool init(const String& path, const LogLevel level);
 
-		static void debug(const std::string& message);
-		static void trace(const std::string& message);
-		static void info(const std::string& message);
-		static void warning(const std::string& message, const bool colored = true);
-		static void error(const std::string& message);
-		static void print(const std::string& message);
+		static void debug(const String& message);
+		static void trace(const String& message);
+		static void info(const String& message);
+		static void warning(const String& message, const bool colored = true);
+		static void error(const String& message);
+		static void print(const String& message);
 	};
 }

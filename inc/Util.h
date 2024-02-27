@@ -1,7 +1,6 @@
 #pragma once
 
 #include <random>
-#include <string>
 
 #include "aliases.h"
 
@@ -22,9 +21,9 @@ namespace Jarvis
 		return randInt(0, max);
 	}
 
-	inline std::string htmlEntities(const std::string& data)
+	inline String htmlEntities(const String& data)
 	{
-		std::string buffer;
+		String buffer;
 		buffer.reserve(data.size());
 
 		for (const char& pos : data) {
@@ -42,16 +41,16 @@ namespace Jarvis
 		return buffer;
 	}
 
-	inline void replaceSubString(std::string& sourceString, const std::string& oldString, const std::string& newString)
+	inline void replaceSubString(String& sourceString, const String& oldString, const String& newString)
 	{
 		size_t pos = 0;
-		while ((pos = sourceString.find(oldString, pos)) != std::string::npos) {
+		while ((pos = sourceString.find(oldString, pos)) != String::npos) {
 			sourceString.replace(pos, oldString.length(), newString);
 			pos += newString.length();
 		}
 	}
 
-	inline std::string toString(const tcp::socket& socket)
+	inline String toString(const tcp::socket& socket)
 	{
 		const tcp::endpoint& endpoint = socket.remote_endpoint();
 		return endpoint.address().to_string() + ":" + std::to_string(endpoint.port());

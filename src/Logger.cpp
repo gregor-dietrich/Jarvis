@@ -17,10 +17,10 @@
 namespace Jarvis
 {
 	LogLevel Logger::logLevel = LogLevel::ERRORMSG;
-	std::string Logger::logFilePath = {};
+	String Logger::logFilePath = {};
 	bool Logger::initialized = false;
 
-	void Logger::createDirectory(const std::string& path)
+	void Logger::createDirectory(const String& path)
 	{
 		if (std::filesystem::exists(path)) {
 			return;
@@ -29,7 +29,7 @@ namespace Jarvis
 		trace("Log Directory created: " + path);
 	}
 
-	std::string Logger::getTime()
+	String Logger::getTime()
 	{
 		const auto now = std::chrono::system_clock::now();
 		const auto now_time = std::chrono::system_clock::to_time_t(now);
@@ -46,7 +46,7 @@ namespace Jarvis
 		return ss.str();
 	}
 
-	std::string Logger::format(const std::string& message)
+	String Logger::format(const String& message)
 	{
 		std::stringstream result;
 
@@ -55,7 +55,7 @@ namespace Jarvis
 		return result.str();
 	}
 
-	std::string Logger::format(const LogLevel messageType, const std::string& message)
+	String Logger::format(const LogLevel messageType, const String& message)
 	{
 		std::stringstream result;
 
@@ -87,7 +87,7 @@ namespace Jarvis
 #ifdef _WIN32
 		static const auto& H_CONSOLE = GetStdHandle(isError ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE);
 		if (!SetConsoleTextAttribute(H_CONSOLE, static_cast<WORD>(c))) {
-			std::stringstream ss;
+			Stringstream ss;
 			ss << "Failed to change text color for " << (isError ? "STDERR" : "STDOUT") << "!";
 			warning(ss.str(), false);
 		}
@@ -101,7 +101,7 @@ namespace Jarvis
 #endif
 	}
 
-	void Logger::print(const LogLevel messageType, const std::string& message)
+	void Logger::print(const LogLevel messageType, const String& message)
 	{
 		switch (messageType) {
 		case LogLevel::DEBUGMSG:
@@ -116,7 +116,7 @@ namespace Jarvis
 		}
 	}
 
-	void Logger::log(const std::string& message)
+	void Logger::log(const String& message)
 	{
 		if (logFilePath.empty()) {
 			return;
@@ -129,7 +129,7 @@ namespace Jarvis
 		logfile << message;
 	}
 
-	bool Logger::init(const std::string& path, const LogLevel level)
+	bool Logger::init(const String& path, const LogLevel level)
 	{
 		if (initialized) {
 			warning("Prevented Logger re-initialization.");
@@ -151,12 +151,12 @@ namespace Jarvis
 		return true;
 	}
 
-	void Logger::print(const std::string& message)
+	void Logger::print(const String& message)
 	{
 		std::cout << format(message);
 	}
 
-    void Logger::debug(const std::string& message)
+    void Logger::debug(const String& message)
     {
 		if (logLevel < LogLevel::DEBUGMSG) {
 			return;
@@ -170,7 +170,7 @@ namespace Jarvis
 		log(formatted);
     }
 
-    void Logger::trace(const std::string& message)
+    void Logger::trace(const String& message)
 	{
 		if (logLevel < LogLevel::TRACEMSG) {
 			return;
@@ -184,7 +184,7 @@ namespace Jarvis
 		log(formatted);
 	}
 
-	void Logger::info(const std::string& message)
+	void Logger::info(const String& message)
 	{
 		if (logLevel < LogLevel::INFOMSG) {
 			return;
@@ -198,7 +198,7 @@ namespace Jarvis
 		log(formatted);
 	}
 
-	void Logger::warning(const std::string& message, const bool colored/* = true*/)
+	void Logger::warning(const String& message, const bool colored/* = true*/)
 	{
 		if (logLevel < LogLevel::WARNINGMSG) {
 			return;
@@ -216,7 +216,7 @@ namespace Jarvis
 		log(formatted);
 	}
 
-	void Logger::error(const std::string& message)
+	void Logger::error(const String& message)
 	{
 		const auto formatted = format(LogLevel::ERRORMSG, message);
 

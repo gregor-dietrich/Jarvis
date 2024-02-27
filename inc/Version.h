@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "aliases.h"
 
 namespace Jarvis
 {
@@ -11,9 +11,9 @@ namespace Jarvis
 		constexpr auto _REVISION = "SNAPSHOT";
 	}
 
-	const std::string VERSION()
+	const String VERSION()
 	{
-		static std::string value;
+		static String value;
 
 		if (value.empty()) {
 			value.append("Jarvis v");

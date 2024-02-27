@@ -11,11 +11,11 @@
 
 namespace Jarvis
 {
-	std::string ResponseFactory::serverAlias;
+	String ResponseFactory::serverAlias;
 
-	std::string ResponseFactory::setServerAlias()
+	String ResponseFactory::setServerAlias()
 	{
-		static const std::array<std::string, 10> fakeOSs = {
+		static const std::array<String, 10> fakeOSs = {
 			" (Alpine)",
 			" (Arch Linux)",
 			" (CentOS)",
@@ -28,7 +28,7 @@ namespace Jarvis
 			" (Win64)"
 		};
 
-		static const std::array<std::string, 15> fakeServers = {
+		static const std::array<String, 15> fakeServers = {
 			"Apache/2.4.41",
 			"Apache/2.4.46",
 			"Apache/2.4.52",
@@ -78,9 +78,9 @@ namespace Jarvis
 		return response.result();
 	}
 
-	void ResponseFactory::sanitize(std::string& data)
+	void ResponseFactory::sanitize(String& data)
 	{
-		static const std::array<std::string, 2> searchStrings = { "..", "%2e%2e" };
+		static const std::array<String, 2> searchStrings = { "..", "%2e%2e" };
 		for (const auto& searchString : searchStrings) {
 			replaceSubString(data, searchString, "");
 		}
@@ -93,7 +93,7 @@ namespace Jarvis
 
 	http::status ResponseFactory::createGETResponse(tcp::socket& socket, const HttpRequest& request)
 	{
-		std::string target = std::string(request.target().substr(1));
+		String target = String(request.target().substr(1));
 		sanitize(target);
 		Logger::trace("Received a GET Request for resource: " + target);
 
@@ -108,7 +108,7 @@ namespace Jarvis
 				}
 				return fileResponse.result();
 			} catch (const std::exception& e) {
-				Logger::error("createGETResponse(): " + std::string(e.what()));
+				Logger::error("createGETResponse(): " + String(e.what()));
 				const auto response = buildErrorResponse(http::status::internal_server_error, request.version());
 				http::write(socket, response);
 				return response.result();
@@ -138,7 +138,7 @@ namespace Jarvis
 		return response;
 	}
 
-	HttpFileResponse ResponseFactory::buildFileResponse(const std::string& target, const unsigned int version)
+	HttpFileResponse ResponseFactory::buildFileResponse(const String& target, const unsigned int version)
 	{
 		HttpFileResponse response;
 		response.version(version);

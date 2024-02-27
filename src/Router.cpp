@@ -9,9 +9,9 @@
 
 namespace Jarvis
 {
-	std::unordered_map<std::string, std::pair<std::string, std::unordered_map<std::string, std::string>>> Router::m_fileRoutes;
+	std::unordered_map<String, std::pair<String, std::unordered_map<String, String>>> Router::m_fileRoutes;
 
-	pt::ptree Router::parseFile(const std::string& filename)
+	pt::ptree Router::parseFile(const String& filename)
 	{
 		pt::ptree root;
 		pt::read_json(filename, root);
@@ -22,11 +22,11 @@ namespace Jarvis
 	{
 		try {
 			for (const auto& routePath : parseFile("cfg/fileRoutes.json")) {
-				const auto& localPath = routePath.second.get<std::string>("localPath");
+				const auto& localPath = routePath.second.get<String>("localPath");
 				for (const auto& fileExtension : routePath.second.get_child("fileExtensions")) {
 					for (const auto& kv : fileExtension.second)	{
 						if (m_fileRoutes.find(routePath.first) == m_fileRoutes.end()) {
-							m_fileRoutes[routePath.first] = std::make_pair(localPath, std::unordered_map<std::string, std::string>());
+							m_fileRoutes[routePath.first] = std::make_pair(localPath, std::unordered_map<String, String>());
 						}
 						m_fileRoutes[routePath.first].second[kv.first] = kv.second.data();
 					}
@@ -34,21 +34,21 @@ namespace Jarvis
 			}
 		}
 		catch (const std::exception& e) {
-			Logger::error("Router::init(): " + std::string(e.what()));
+			Logger::error("Router::init(): " + String(e.what()));
 			return false;
 		}
 
 		return true;
 	}
 
-	bool Router::fileRouteExists(std::string route)
+	bool Router::fileRouteExists(String route)
 	{
 		try {
 			size_t pos = route.find("?");
-			if (pos != std::string::npos) {
+			if (pos != String::npos) {
 				route = route.substr(0, pos);
 			}
-			std::vector<std::string> path;
+			std::vector<String> path;
 			boost::split(path, route, boost::is_any_of("/"));
 			
 			if (path.empty() || m_fileRoutes.count(path[0]) == 0) {
@@ -59,7 +59,7 @@ namespace Jarvis
 			for (const auto& fileExtension : fileRoute.second) {
 				const auto& fileName = path[path.size() - 1];
 				
-				auto offset = std::string::npos;
+				auto offset = String::npos;
 				for (int64_t i = fileName.length() - 1; i >= 0; --i) {
 					if (fileName[i] != '.') {
 						continue;
@@ -68,7 +68,7 @@ namespace Jarvis
 					break;
 				}
 
-				if (offset == std::string::npos) {
+				if (offset == String::npos) {
 					continue;
 				}
 				
@@ -83,21 +83,21 @@ namespace Jarvis
 		return false;
 	}
 
-	std::string Router::getMimeType(const std::string& target)
+	String Router::getMimeType(const String& target)
 	{
-		std::vector<std::string> result;
+		std::vector<String> result;
 		boost::split(result, target, boost::is_any_of("/"));
 		const auto& fileName = result[result.size() - 1];
 		const auto fileExtension = fileName.substr(fileName.find('.') + 1);
 		return m_fileRoutes[result[0]].second[fileExtension];
 	}
 
-	std::string Router::getLocalPath(const std::string& target)
+	String Router::getLocalPath(const String& target)
 	{
-		std::vector<std::string> result;
+		std::vector<String> result;
 		boost::split(result, target, boost::is_any_of("/"));
 
-		std::string filePath = target;
+		String filePath = target;
 		replaceSubString(filePath, result[0] + "/", m_fileRoutes[result[0]].first + "/");
 		return filePath;
 	}

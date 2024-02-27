@@ -1,10 +1,11 @@
 #pragma once
 
 #include <unordered_map>
-#include <string>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+
+#include "aliases.h"
 
 namespace Jarvis
 {
@@ -12,14 +13,14 @@ namespace Jarvis
 
 	class Router
 	{
-		static std::unordered_map<std::string, std::pair<std::string, std::unordered_map<std::string, std::string>>> m_fileRoutes;
+		static std::unordered_map<String, std::pair<String, std::unordered_map<String, String>>> m_fileRoutes;
 
-		static pt::ptree parseFile(const std::string& filename);
+		static pt::ptree parseFile(const String& filename);
 
 	public:
 		static bool init();
-		static bool fileRouteExists(std::string route);
-		static std::string getLocalPath(const std::string& target);
-		static std::string getMimeType(const std::string& target);
+		static bool fileRouteExists(String route);
+		static String getLocalPath(const String& target);
+		static String getMimeType(const String& target);
 	};
 }
