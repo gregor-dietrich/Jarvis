@@ -31,6 +31,9 @@ foreach(MAJOR RANGE 83 99)
 endforeach()
 find_package(Boost ${BOOST_MIN_VERSION} REQUIRED)
 
+# Mustache Package
+add_subdirectory(lib/mstch)
+
 # Other Packages
 find_package(Threads REQUIRED)
 find_package(OpenSSL ${OPENSSL_MIN_VERSION} REQUIRED)
@@ -39,5 +42,5 @@ find_package(OpenSSL ${OPENSSL_MIN_VERSION} REQUIRED)
 add_executable(Jarvis ${SOURCES})
 target_compile_definitions(Jarvis PRIVATE BOOST_BIND_GLOBAL_PLACEHOLDERS BOOST_MYSQL_SEPARATE_COMPILATION)
 target_compile_features(Jarvis PRIVATE cxx_std_${CMAKE_CXX_STANDARD})
-target_include_directories(Jarvis PRIVATE inc ${Boost_INCLUDE_DIRS})
-target_link_libraries(Jarvis PRIVATE Threads::Threads OpenSSL::Crypto OpenSSL::SSL)
+target_include_directories(Jarvis PRIVATE inc ${Boost_INCLUDE_DIRS} ${mstch_INCLUDE_DIR})
+target_link_libraries(Jarvis PRIVATE mstch Threads::Threads OpenSSL::Crypto OpenSSL::SSL)
