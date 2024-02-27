@@ -55,4 +55,16 @@ namespace Jarvis
 		const tcp::endpoint& endpoint = socket.remote_endpoint();
 		return endpoint.address().to_string() + ":" + std::to_string(endpoint.port());
 	}
+
+	inline std::stringstream readFile(const String& path)
+	{
+		std::stringstream ss;
+		std::ifstream file(path, std::ios::binary);
+		if (!file.good()) {
+			Logger::error("Error reading file: " + path);
+			return ss;
+		}
+		ss << file.rdbuf();
+		return ss;
+	}
 }

@@ -19,7 +19,7 @@ namespace Jarvis
 
 		static http::status createGETResponse(tcp::socket& socket, const HttpRequest& request);
 
-		static HttpStringResponse buildErrorResponse(const http::status statusCode, const unsigned int version);
+		static HttpStringResponse buildErrorResponse(const http::status statusCode, const u32 version);
 		static HttpFileResponse buildFileResponse(const String& target, const unsigned int version);
 	public:
 		static http::status createResponse(tcp::socket& socket, const HttpRequest& request);

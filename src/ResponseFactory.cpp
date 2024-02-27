@@ -120,20 +120,22 @@ namespace Jarvis
 		return response.result();
 	}
 
-	HttpStringResponse ResponseFactory::buildErrorResponse(const http::status statusCode, const unsigned int version)
+	HttpStringResponse ResponseFactory::buildErrorResponse(const http::status statusCode, const u32 version)
 	{
 		HttpStringResponse response;
 		response.version(version);
 		response.set(http::field::server, serverAlias);
 		response.set(http::field::content_type, "text/html");
 		response.result(statusCode);
-
+		
+		std::vector<String> files = {"html/header.html", "html/error.html", "html/footer.html"};
 		std::stringstream html;
-		html << "<!DOCTYPE html><html lang=\"en\"><head><title>Jarvis</title></head><body>";
-		html << "<div><h1>Error " << static_cast<int>(statusCode) << "</h1><p>" << statusCode << "</p></div>";
-		html << "</body></html>";
-		response.body() = html.str();
 
+		for (const auto& file : files) {
+			html << readFile(file).str();
+		}
+
+		response.body() = html.str();
 		response.prepare_payload();
 		return response;
 	}
