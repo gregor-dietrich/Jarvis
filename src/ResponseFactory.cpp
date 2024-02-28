@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include <boost/algorithm/string.hpp>
+#include <mstch/mstch.hpp>
 
 #include "Logger.h"
 #include "Router.h"
@@ -127,15 +128,21 @@ namespace Jarvis
 		response.set(http::field::server, serverAlias);
 		response.set(http::field::content_type, "text/html");
 		response.result(statusCode);
-		
+
 		std::vector<String> files = {"html/header.html", "html/error.html", "html/footer.html"};
-		std::stringstream html;
-
+		std::stringstream view;
 		for (const auto& file : files) {
-			html << readFile(file).str();
+			view << readFile(file).str();
 		}
+		
+		std::stringstream message;
+		message << statusCode;
+		mstch::map context{
+			{"statusCode", static_cast<i32>(statusCode)},
+			{"statusDescription", message.str()}
+		};
 
-		response.body() = html.str();
+		response.body() = mstch::render(view.str(), context);
 		response.prepare_payload();
 		return response;
 	}
