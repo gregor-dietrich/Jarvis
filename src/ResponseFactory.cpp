@@ -114,6 +114,8 @@ namespace Jarvis
 				http::write(socket, response);
 				return response.result();
 			}
+		} else if (!target.empty()) {
+			Logger::debug("File not found: " + target);
 		}
 
 		const auto response = buildErrorResponse(http::status::not_found, request.version());
