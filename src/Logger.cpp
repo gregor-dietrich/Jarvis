@@ -87,7 +87,7 @@ namespace Jarvis
 #ifdef _WIN32
 		static const auto& H_CONSOLE = GetStdHandle(isError ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE);
 		if (!SetConsoleTextAttribute(H_CONSOLE, static_cast<WORD>(c))) {
-			Stringstream ss;
+			std::stringstream ss;
 			ss << "Failed to change text color for " << (isError ? "STDERR" : "STDOUT") << "!";
 			warning(ss.str(), false);
 		}

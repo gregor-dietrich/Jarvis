@@ -151,14 +151,14 @@
     <ClCompile Include="src\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\aliases.h" />
     <ClInclude Include="inc\DB.h" />
     <ClInclude Include="inc\Logger.h" />
     <ClInclude Include="inc\Server.h" />
-    <ClInclude Include="inc\Types.h" />
     <ClInclude Include="inc\ResponseFactory.h" />
-    <ClInclude Include="inc\Util.h" />
     <ClInclude Include="inc\Router.h" />
-    <ClInclude Include="inc\Version.h" />
+    <ClInclude Include="inc\util.h" />
+    <ClInclude Include="inc\version.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cfg\fileRoutes.json" />

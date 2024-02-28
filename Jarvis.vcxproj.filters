@@ -41,25 +41,25 @@
     <ClInclude Include="inc\Server.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Types.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="inc\ResponseFactory.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="inc\Logger.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Util.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="inc\Router.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Version.h">
+    <ClInclude Include="inc\DB.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="inc\DB.h">
+    <ClInclude Include="inc\aliases.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\version.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

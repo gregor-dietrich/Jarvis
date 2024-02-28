@@ -3,6 +3,7 @@
 #include <string>
 #include <thread>
 
+#include "aliases.h"
 #include "DB.h"
 #include "Logger.h"
 #include "Server.h"
