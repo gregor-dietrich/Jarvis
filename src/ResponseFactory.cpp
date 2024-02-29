@@ -1,4 +1,3 @@
-#include <iostream>
 #include <sstream>
 
 #include <boost/algorithm/string.hpp>
@@ -131,11 +130,8 @@ namespace Jarvis
 		response.set(http::field::content_type, "text/html");
 		response.result(statusCode);
 
-		std::vector<String> files = {"html/header.html", "html/error.html", "html/footer.html"};
-		std::stringstream view;
-		for (const auto& file : files) {
-			view << readFile(file).str();
-		}
+		std::stringstream html;
+		html << readFile("html/header.html");
 		
 		std::stringstream message;
 		message << statusCode;
@@ -144,7 +140,12 @@ namespace Jarvis
 			{"statusDescription", message.str()}
 		};
 
-		response.body() = mstch::render(view.str(), context);
+		const auto view = readFile("html/error.html");
+		html << mstch::render(view, context);
+
+		html << readFile("html/footer.html");
+
+		response.body() = html.str();
 		response.prepare_payload();
 		return response;
 	}

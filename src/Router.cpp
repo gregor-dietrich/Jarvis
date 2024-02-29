@@ -60,7 +60,7 @@ namespace Jarvis
 				const auto& fileName = path[path.size() - 1];
 				
 				auto offset = String::npos;
-				for (int64_t i = fileName.length() - 1; i >= 0; --i) {
+				for (i64 i = fileName.length() - 1; i >= 0; --i) {
 					if (fileName[i] != '.') {
 						continue;
 					}
