@@ -3,9 +3,9 @@
 #include <memory>
 #include <vector>
 
-#include <boost/mysql.hpp>
-
 #include "aliases.h"
+
+#include <boost/mysql.hpp>
 
 namespace Jarvis
 {
