@@ -1,6 +1,8 @@
 #pragma once
 
+#include <fstream>
 #include <random>
+#include <string>
 
 #include "aliases.h"
 
@@ -56,15 +58,20 @@ namespace Jarvis
 		return endpoint.address().to_string() + ":" + std::to_string(endpoint.port());
 	}
 
-	inline std::stringstream readFile(const String& path)
+	inline String readFile(const String& path)
 	{
-		std::stringstream ss;
-		std::ifstream file(path, std::ios::binary);
+		std::ifstream file(path, std::ios::binary | std::ios::ate);
 		if (!file.good()) {
 			Logger::error("Error reading file: " + path);
-			return ss;
+			return {};
 		}
-		ss << file.rdbuf();
-		return ss;
+
+		std::streamsize size = file.tellg();
+		file.seekg(0, std::ios::beg);
+
+		String buffer(size, '\0');
+		file.read(&buffer[0], size);
+
+		return buffer;
 	}
 }
