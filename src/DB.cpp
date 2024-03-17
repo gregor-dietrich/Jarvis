@@ -13,7 +13,7 @@ namespace Jarvis
 	{
 	}
 
-	std::unique_ptr<mysql::tcp_ssl_connection> DB::connect() const
+	mysql::results DB::query(const String& query, const std::vector<mysql::field>& params) const
 	{
 		// Handshake Params
 		mysql::handshake_params dbParams(m_username, m_password, m_database);
@@ -39,27 +39,19 @@ namespace Jarvis
 		// Connect to the server using the first endpoint returned by the resolver
 		conn->connect(*endpoints.begin(), dbParams);
 
-		return conn;
-	}
-
-	mysql::results DB::query(const String& query, const std::vector<mysql::field>& params) const
-	{
 		mysql::results result;
 		try {
-			auto conn = connect();
-
 			 // Prepare the statement
         	mysql::statement stmt = conn->prepare_statement(query);
 
 			// Issue the SQL query to the server
 			conn->execute(stmt.bind(params.begin(), params.end()), result);
-
-			// Close the connection
-			conn->close();
 		}
 		catch (const std::exception& err) {
 			Logger::error(err.what());
 		}
+
+		conn->close();
 		return result;
 	}
 

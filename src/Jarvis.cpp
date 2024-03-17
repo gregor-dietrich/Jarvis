@@ -62,6 +62,16 @@ int main(int argc, char** argv)
 
 		const auto args = parseArgs(argc, argv);
 		Logger::init(args.logDir, args.logLevel);
+
+		DB db("root", "", "company", "localhost");
+
+		const auto tables = db.query("SELECT table_name FROM information_schema.tables WHERE table_schema = ?", { mysql::field("company") });
+
+		for (const auto& row : tables.rows()) {
+			Logger::info(row[0].as_string());
+			const auto result = db.query("SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ?", { mysql::field(row[0]) });
+			Logger::info(DB::to_string(result));
+		}
 		
 		Server server(args.port);
 		std::thread serverThread(&Server::run, &server);
